@@ -66,6 +66,68 @@ def get_single_user_entry(collection_name, username, _id):
     return entries
 
 
+def add_value_document(collection_name, document_id, field_name, field_value):
+    collection = db[collection_name]
+
+    query = {"_id": document_id}
+    update = {"$set": {field_name: field_value}}
+
+    result = collection.update_one(query, update, upsert=True)
+
+    if result.modified_count > 0 or result.upserted_id:
+        return {"message": "Field updated or added successfully"}
+    else:
+        return {"message": "No changes made"}
+
+
+def get_user_game(collection_name, username, _id):
+    collection = db[collection_name]
+
+    # Find a single document where the 'username' field matches the provided username and '_id' matches the provided _id
+    query = {"username": username, "_id": ObjectId(_id)}
+    game_entry = collection.find_one(query)
+
+    if game_entry:
+        game_entry["_id"] = str(game_entry["_id"])
+    
+    if game_entry == None:
+        return {"message": "game not found."}
+
+    if "messages" not in game_entry:
+        add_value_document(collection_name, _id, "messages", [])
+        game_entry["messages"] = []
+
+    Senario = get_single_user_entry("Senarios", username, game_entry["senario"])
+    Npc = get_single_user_entry("NpcCharacters", username, Senario[0]["npc"])
+    Player = get_single_user_entry("PlayerCharacters", username, Senario[0]["player"])
+
+
+    data = {
+        "name": game_entry["name"],
+        "username": Senario[0]["username"],
+        "senario": Senario[0],
+        "player": Player[0],
+        "npc": Npc[0]
+    }
+
+    print(data)
+    
+    return {"message": data}
+
+
+def get_all_npc_characters(collection_name):
+    collection = db[collection_name]
+
+    npc_characters = []
+    cursor = collection.find({})
+
+    for npc in cursor:
+        npc_characters.append(npc)
+
+    return npc_characters
+
+
+
 def update_single_user_entry(collection_name, username, _id, new_entry):
     collection = db[collection_name]
     new_entry.pop("_id")

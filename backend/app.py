@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
-from backend_functions import login_user, create_user, insert_entry, get_user_entries, remove_user_entry, get_single_user_entry, update_single_user_entry
+from backend_functions import login_user, create_user, insert_entry, get_user_entries, remove_user_entry, get_single_user_entry, update_single_user_entry, get_user_game
 
 app = FastAPI()
 
@@ -39,6 +39,13 @@ async def create_entry(data: dict):
 async def remove_entry(data: dict):
     data = data["params"]
     entries = remove_user_entry(data["collection_name"], data["username"], data["_id"])
+    return {"message": entries}
+
+
+@app.post("/get_game")
+async def get_game(data: dict):
+    data = data["params"]
+    entries = get_user_game(data["collection_name"], data["username"], data["_id"])
     return {"message": entries}
 
 

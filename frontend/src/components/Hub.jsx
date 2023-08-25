@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
-import { GetEntries, RemoveEntry } from '../api/FormRoutes'
 import PlayerCharacterCard from './HubCards/PlayerCharacterCard'
 import NpcCharacterCard from './HubCards/NpcCharacterCard'
-import GameCard from './HubCards/GameCard'
+import SenarioCard from './HubCards/SenarioCard'
+import GameCard from './ContinueGames'
 
 
 const Hub = () => {
@@ -34,6 +34,7 @@ const Hub = () => {
 
                 <PlayerCharacterCard type="display" username={usernameValue}/>
                 <NpcCharacterCard type="display" username={usernameValue}/>
+                <SenarioCard type="display" username={usernameValue}/>
                 <GameCard type="display" username={usernameValue}/>
             </>
         }

@@ -164,7 +164,7 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
 
                     <div className=' w-full flex items-center gap-4 justify-center mt-10'>
                         <button onClick={() => navigate("/Hub")} className=' btn text-white bg-red-800 hover:bg-red-800'>Go Back</button>
-                        <button onClick={() => submitForm()} className=' btn text-white bg-purple-800 hover:bg-purple-800'>{Type}</button>
+                        <button onClick={() => submitForm()} className=' btn text-white bg-purple-800 hover:bg-purple-800'>{(Type === "Edit") && "Update"}{(Type === "Create") && "Create"}</button>
                     </div>
 
 
