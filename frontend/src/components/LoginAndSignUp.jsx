@@ -24,7 +24,7 @@ const LoginAndSignUp = ( { type } ) => {
 
         if (type == "Login") {
             const response = await Login(params)
-            console.log(response)
+            // console.log(response)
             if (response !== "user not found") {
                 Cookies.remove('username')
                 Cookies.set('username', response["username"])
@@ -33,7 +33,7 @@ const LoginAndSignUp = ( { type } ) => {
 
         if (type == "SignUp") {
             const response = await CreateUser(params)
-            console.log(response)
+            // console.log(response)
             if (response !== "user exists") {
                 Cookies.remove('username')
                 Cookies.set('username', response["username"])

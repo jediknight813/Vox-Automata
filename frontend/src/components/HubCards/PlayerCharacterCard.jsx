@@ -11,6 +11,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
     useEffect(() => {
         const playerCharacterEntrys = async () => {
             setPlayerCharacters(await GetEntries("PlayerCharacters", username))
+            console.log(await GetEntries("PlayerCharacters", username))
         }
         playerCharacterEntrys()
 
@@ -32,7 +33,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
         <div className=' flex flex-col md:flex-row gap-4 items-center'>
             <h1 className=' font-Comfortaa text-3xl font-bold'>Player Characters</h1>
             {(playerCharacters.length >= 1 && type != "edit") &&
-                <button onClick={() => navigate("/CreatePlayerCharacter")} className={`cursor-pointer font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] ${(type  == "display") ? ' bg-slate-900 ' : ' bg-slate-800 '}`}>Create Player</button>
+                <button onClick={() => navigate("/CreatePlayerCharacter")} className={`cursor-pointer mb-4 font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] ${(type  == "display") ? ' bg-slate-900 ' : ' bg-slate-800 '}`}>Create Player</button>
             }
             </div>
 
@@ -48,10 +49,11 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
             :
             <>
                 {playerCharacters.map((element, index) => (
-                    <div className={` min-h-[200px] min-w-[200px] rounded-md flex flex-col items-center mt-5 mb-2 ${(type  == "display") ? ' bg-slate-900 ' : ' bg-slate-800 '}`} key={index}>
-                        <h1 className=' self-center font-Comfortaa mt-10'>{element["name"]}</h1>
-                        <div className=' flex gap-2 mt-auto mb-4'>
-
+                    <div key={index} className="card card-compact w-[250px] flex-none bg-base-100 shadow-xl">
+                        <figure><img src={`data:image/jpeg;base64,${element?.image_base64}`} /></figure>
+                        <div className="card-body">
+                            <h2 className="card-title font-Comfortaa">{element["name"]}</h2>
+                            <div className="card-actions justify-end">
                             {(type == "display") &&
                                 <>
                                     <button onClick={() => navigate("/EditPlayerCharacter/:"+element["_id"])} className=' btn text-white bg-purple-700 hover:bg-purple-700'>Edit</button>
@@ -68,7 +70,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
                                     }
                                 </>
                             }
-                        
+                            </div>
                         </div>
                     </div>
                 ))}

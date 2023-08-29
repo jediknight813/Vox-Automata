@@ -16,3 +16,18 @@ export const GetBotResponse = async (gameData, username, userMessage) => {
     });
     return response.data["message"]
 }
+
+
+export const UndoLastMessage = async (gameData, username) => {
+    const response = await axios.post(apiUrl+"/undo_last_message", {
+        params: {"gameData": gameData, "username": username}
+    });
+    return response.data["message"]
+}
+
+export const ResetStory = async (gameData, username) => {
+    const response = await axios.post(apiUrl+"/reset_story", {
+        params: {"gameData": gameData, "username": username}
+    });
+    return response.data["message"]
+}

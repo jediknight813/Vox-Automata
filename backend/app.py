@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend_functions import login_user, create_user, insert_entry, get_user_entries, remove_user_entry, get_single_user_entry, update_single_user_entry, get_user_game, update_game_messages
+from backend_functions import login_user, create_user, insert_entry, get_user_entries, remove_user_entry, get_single_user_entry, update_single_user_entry, get_user_game, update_game_messages, add_value_document
 from text_generation import generate_response
 from dotenv import load_dotenv
 import os
@@ -56,6 +56,30 @@ async def get_game(data: dict):
     data = data["params"]
     entries = get_user_game(data["collection_name"], data["username"], data["_id"])
     return {"message": entries}
+
+
+@app.post("/undo_last_message")
+async def undo_last_message(data: dict):
+    data = data["params"]
+
+    game_id = data["gameData"].replace(":", "")
+    gameData = get_user_game("Games", data["username"], game_id)
+    gameDataMessages = gameData["message"]["messages"]
+
+    if isinstance(gameDataMessages, list) and len(gameDataMessages) > 0:
+        gameDataMessages.pop() 
+
+    add_value_document("Games", game_id, "messages", gameDataMessages)
+
+    return {"message": "removed"}
+
+
+@app.post("/reset_story")
+async def undo_last_message(data: dict):
+    data = data["params"]
+    game_id = data["gameData"].replace(":", "")
+    add_value_document("Games", game_id, "messages", [])
+    return {"message": "restarted story"}
 
 
 @app.post("/get_bot_response")

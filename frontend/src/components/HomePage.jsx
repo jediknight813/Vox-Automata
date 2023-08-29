@@ -19,7 +19,7 @@ const HomePage = () => {
     <div className=' flex flex-col items-center w-full h-screen'>
 
       <div className=' flex flex-col items-center gap-2 mt-20'>
-        <h1 className=' font-sedgwick-ave-display text-8xl'>Vox Automata</h1>
+        <h1 className=' font-sedgwick-ave-display text-5xl md:text-8xl'>Vox Automata</h1>
         <h1 className=' font-Comfortaa font-extralight text-3xl'>V0.1</h1>
       </div>
 

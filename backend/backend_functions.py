@@ -6,8 +6,10 @@ load_dotenv()
 from bson import ObjectId
 mongodb_url = os.environ.get("MONGO_URL")
 database = "VOX_AUTOMATA"
-
-
+from image_generation import generate_image_local, create_image_dream_studio
+import base64
+import requests
+A1111_URL = os.getenv("A1111_URL")
 client = pymongo.MongoClient(mongodb_url, 27017)
 db = client[database]
 
@@ -24,8 +26,8 @@ def login_user(username, password):
 
 
 def insert_entry(data, collection_name):
+    data = handle_image_generation(collection_name, data)
 
-    print(data, collection_name)
 
     collection = db[collection_name]
     entry = collection.insert_one(data)
@@ -69,7 +71,7 @@ def get_single_user_entry(collection_name, username, _id):
 def add_value_document(collection_name, document_id, field_name, field_value):
     collection = db[collection_name]
 
-    query = {"_id": document_id}
+    query = {"_id": ObjectId(document_id)}
     update = {"$set": {field_name: field_value}}
 
     result = collection.update_one(query, update, upsert=True)
@@ -103,6 +105,7 @@ def get_user_game(collection_name, username, _id):
 
 
     data = {
+        "game_id": game_entry["_id"],
         "name": game_entry["name"],
         "username": Scenario[0]["username"],
         "scenario": Scenario[0],
@@ -141,6 +144,8 @@ def update_game_messages(username, _id, new_value):
 def update_single_user_entry(collection_name, username, _id, new_entry):
     collection = db[collection_name]
     new_entry.pop("_id")
+    new_entry = handle_image_generation(collection_name, new_entry)
+
     # Find the document where the 'username' field matches the provided username and '_id' matches the given _id
     query = {"username": username, "_id": ObjectId(_id)}
     update_result = collection.update_one(query, {"$set": new_entry})
@@ -149,6 +154,47 @@ def update_single_user_entry(collection_name, username, _id, new_entry):
         return {"message": "Entry updated successfully"}
     else:
         return {"message": "No entry was updated"}
+
+
+
+def check_url(url, timeout=200): 
+    try:
+        response = requests.get(url, timeout=timeout)
+        return response.status_code == 200
+    except (requests.ConnectionError, requests.Timeout):
+        return False
+
+
+def handle_image_generation(collection_name, data): 
+    use_local_image_generation = check_url(url=f'{A1111_URL}/info')
+    print("is using local image gen: ", use_local_image_generation)
+    if collection_name == "NpcCharacters":
+
+        if use_local_image_generation == True:
+            image_path = generate_image_local(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, {data["appearance"]}, and is wearing {data["wearing"]}, detailed, amazing. ')
+        else:
+            image_path = create_image_dream_studio(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, {data["appearance"]}, and is wearing {data["wearing"]}, detailed, amazing. ')
+
+
+        with open(image_path, "rb") as image_file:
+            base64_encoded = base64.b64encode(image_file.read()).decode("utf-8")
+            data["image_base64"] = base64_encoded
+            os.remove(image_path)
+
+    if collection_name == "PlayerCharacters":
+
+        if use_local_image_generation == True:
+            image_path = generate_image_local(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, and is wearing {data["wearing"]}, detailed, amazing. ')
+        else:
+            image_path = create_image_dream_studio(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, and is wearing {data["wearing"]}, detailed, amazing. ')
+
+        with open(image_path, "rb") as image_file:
+            base64_encoded = base64.b64encode(image_file.read()).decode("utf-8")
+            data["image_base64"] = base64_encoded
+            os.remove(image_path)
+
+
+    return data
 
 
 def remove_user_entry(collection_name, username, _id):
@@ -167,7 +213,7 @@ def remove_user_entry(collection_name, username, _id):
 
 
 def create_user(username, password):
-    # check if user exists.
+    # check if user exists.f
     user_check = login_user(username, password)
     if user_check["message"] != "user not found":
         return {"message": "user exists"}
