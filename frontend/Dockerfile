@@ -1,5 +1,4 @@
-# Use an official Node.js image as the base image
-FROM node:14 AS build
+FROM node:18
 
 # Set the working directory
 WORKDIR /app
@@ -17,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Expose the port that the Vite development server runs on
-EXPOSE 5173
+EXPOSE 5174
 
 # Command to start the Vite development server
 CMD ["npm", "run", "dev", "--", "--host"]

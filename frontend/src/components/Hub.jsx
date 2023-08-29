@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import PlayerCharacterCard from './HubCards/PlayerCharacterCard'
 import NpcCharacterCard from './HubCards/NpcCharacterCard'
-import SenarioCard from './HubCards/SenarioCard'
+import SenarioCard from './HubCards/ScenarioCard'
 import GameCard from './ContinueGames'
 
 

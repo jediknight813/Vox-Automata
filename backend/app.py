@@ -1,11 +1,20 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend_functions import login_user, create_user, insert_entry, get_user_entries, remove_user_entry, get_single_user_entry, update_single_user_entry, get_user_game
+from backend_functions import login_user, create_user, insert_entry, get_user_entries, remove_user_entry, get_single_user_entry, update_single_user_entry, get_user_game, update_game_messages
+from text_generation import generate_response
+from dotenv import load_dotenv
+import os
+load_dotenv()
+FRONTEND_URL = os.environ.get("FRONTEND_URL")
+MONGO_URL = os.environ.get("MONGO_URL")
+import uvicorn
+
 
 app = FastAPI()
 
 origins = [
-    "http://localhost:5174",  # Replace with your desired origin(s)
+    # FRONTEND_URL,
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
@@ -49,6 +58,27 @@ async def get_game(data: dict):
     return {"message": entries}
 
 
+@app.post("/get_bot_response")
+async def get_game(data: dict):
+    data = data["params"]
+
+    game_id = data["gameData"].replace(":", "")
+    gameData = get_user_game("Games", data["username"], game_id)
+    gameData = gameData["message"]
+
+    if data["username"] != gameData["username"]:
+        return
+    
+
+    npc_response = generate_response(gameData, data["userMessage"])
+
+    update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": data["userMessage"]})
+    update_game_messages(data["username"], game_id, {"name": gameData["npc"]["name"], "type": "bot", "message": npc_response})
+
+    return {"message": npc_response}
+
+
+
 @app.post("/get_user_entry")
 async def get_user_entry(data: dict):
     data = data["params"]
@@ -71,6 +101,6 @@ async def get_entries(data: dict):
 
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8888)
 
+# host=MONGO_URL

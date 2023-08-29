@@ -97,21 +97,20 @@ def get_user_game(collection_name, username, _id):
         add_value_document(collection_name, _id, "messages", [])
         game_entry["messages"] = []
 
-    Senario = get_single_user_entry("Senarios", username, game_entry["senario"])
-    Npc = get_single_user_entry("NpcCharacters", username, Senario[0]["npc"])
-    Player = get_single_user_entry("PlayerCharacters", username, Senario[0]["player"])
+    Scenario = get_single_user_entry("Scenarios", username, game_entry["scenario"])
+    Npc = get_single_user_entry("NpcCharacters", username, Scenario[0]["npc"])
+    Player = get_single_user_entry("PlayerCharacters", username, Scenario[0]["player"])
 
 
     data = {
         "name": game_entry["name"],
-        "username": Senario[0]["username"],
-        "senario": Senario[0],
+        "username": Scenario[0]["username"],
+        "scenario": Scenario[0],
         "player": Player[0],
-        "npc": Npc[0]
+        "npc": Npc[0],
+        "messages": game_entry["messages"]
     }
 
-    print(data)
-    
     return {"message": data}
 
 
@@ -126,6 +125,17 @@ def get_all_npc_characters(collection_name):
 
     return npc_characters
 
+
+def update_game_messages(username, _id, new_value):
+    collection = db["Games"]
+    query = {"username": username, "_id": ObjectId(_id)}
+    update_result = collection.update_one(query, {"$push": {"messages": new_value}})
+
+
+    if update_result.modified_count > 0:
+        return {"message": "Value added to the list successfully"}
+    else:
+        return {"message": "No changes were made"}
 
 
 def update_single_user_entry(collection_name, username, _id, new_entry):

@@ -6,7 +6,7 @@ import Hub from "./components/Hub"
 import Form from "./components/Form"
 import NpcCharacterCard from "./components/HubCards/NpcCharacterCard"
 import PlayerCharacterCard from "./components/HubCards/PlayerCharacterCard"
-import SenarioCard from "./components/HubCards/SenarioCard"
+import SenarioCard from "./components/HubCards/ScenarioCard"
 import GamePage from "./components/GamePage/GamePage"
 
 
@@ -31,7 +31,7 @@ function App() {
 
   const Senario_Form_Keys = [
     {"name": "name", "type": "string"},
-    {"name": "senario", "type": "string"},
+    {"name": "scenario", "type": "string"},
     {"name": "npc", "type": "other", "component": NpcCharacterCard},
     {"name": "player", "type": "other", "component": PlayerCharacterCard},
   ]
@@ -39,7 +39,7 @@ function App() {
 
   const Game_Form_Keys = [
     {"name": "name", "type": "string"},
-    {"name": "senario", "type": "other", "component": SenarioCard},
+    {"name": "scenario", "type": "other", "component": SenarioCard},
   ]
 
 
@@ -54,27 +54,32 @@ function App() {
         <NavBar />
         <Routes>
 
+
           <Route path="/" element={<HomePage />} />
           <Route path="/Login" element={<LoginAndSignUp type="Login" />} />
           <Route path="/Sign-Up" element={<LoginAndSignUp type="SignUp" />} />
           <Route path="/Hub" element={<Hub />} />
-          
+
+
           {/* create and edit routes for player characters */}
           <Route path="/CreatePlayerCharacter" element={<Form FormKeys={Player_Character_Form_Keys} Type="Create" name="Create Player Character" fieldName="PlayerCharacters" />} />
           <Route path="/EditPlayerCharacter/:entryId" element={<Form FormKeys={Player_Character_Form_Keys} Type="Edit" name="Edit Player Character" fieldName="PlayerCharacters" />} />
-          
+
+
           {/* create and edit routes for npc characters */}
           <Route path="/CreateNpcCharacter" element={<Form FormKeys={NPC_Character_Form_Keys} Type="Create" name="Create Npc Character" fieldName="NpcCharacters" />} />
           <Route path="/EditNpcCharacter/:entryId" element={<Form FormKeys={NPC_Character_Form_Keys} Type="Edit" name="Edit Npc Character" fieldName="NpcCharacters" />} />
 
+
           {/* create and edit routes for senarios */}
-          <Route path="/CreateSenario" element={<Form FormKeys={Senario_Form_Keys} Type="Create" name="Create Senario" fieldName="Senarios" />} />
-          <Route path="/EditSenario/:entryId" element={<Form FormKeys={Senario_Form_Keys} Type="Edit" name="Edit Senario" fieldName="Senarios" />} />
+          <Route path="/CreateScenario" element={<Form FormKeys={Senario_Form_Keys} Type="Create" name="Create Senario" fieldName="Scenarios" />} />
+          <Route path="/EditScenario/:entryId" element={<Form FormKeys={Senario_Form_Keys} Type="Edit" name="Edit Senario" fieldName="Scenarios" />} />
 
 
           {/* create and edit routes for games */}
           <Route path="/CreateGame" element={<Form FormKeys={Game_Form_Keys} Type="Create" name="Create Senario" fieldName="Games" />} />
           <Route path="/CurrentGame/:GameId" element={<GamePage  />} />
+
 
         </Routes>
       </BrowserRouter>

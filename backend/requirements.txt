@@ -1,2 +1,8 @@
 fastapi
 pymongo
+guidance
+requests
+openai
+python-dotenv
+uvicorn
+pydantic
