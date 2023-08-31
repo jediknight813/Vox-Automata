@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { GetEntries, RemoveEntry } from '../../api/FormRoutes'
 import { useNavigate } from 'react-router-dom'
+import { GetImage } from '../../api/UserRoutes'
 
 
 const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedId="", fieldName="" } ) => {
@@ -11,10 +12,8 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
     useEffect(() => {
         const playerCharacterEntrys = async () => {
             setPlayerCharacters(await GetEntries("PlayerCharacters", username))
-            console.log(await GetEntries("PlayerCharacters", username))
         }
         playerCharacterEntrys()
-
     }, [username])
 
     const DeleteEntry = async (collectionName, entryId) => {
@@ -24,6 +23,54 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
             setPlayerCharacters(updatedPlayerCharacters)
         }
 
+    }
+
+
+    const Card = ( { element, key } ) => {
+        const [base64Image, setBase64Image] = useState()
+
+        useEffect(() => {   
+            const getNpcImage = async () => {
+                var npcImg = await GetImage(element["image_base64_id"])
+                setBase64Image(npcImg)
+            }
+            getNpcImage()
+        })
+
+        if (base64Image == undefined) {
+            return (
+                <>
+                </>
+            )
+        }
+
+
+        return (
+            <div key={key} className="card card-compact w-[250px] flex-none bg-base-100 shadow-xl">
+                <figure><img src={`data:image/jpeg;base64,${base64Image}`} /></figure>
+                <div className="card-body">
+                    <h2 className="card-title font-Comfortaa">{element["name"]}</h2>
+                    <div className="card-actions justify-end">
+                    {(type == "display") &&
+                        <>
+                            <button onClick={() => navigate("/EditPlayerCharacter/:"+element["_id"])} className=' btn text-white bg-purple-700 hover:bg-purple-700'>Edit</button>
+                            <button onClick={() => DeleteEntry("PlayerCharacters", element["_id"])} className=' btn text-white bg-red-800 hover:bg-red-800'>Delete</button>
+                        </>
+                    }
+
+                    {(type == "select") &&
+                        <>
+                            { (element["_id"] == selectedId(fieldName) ) ?
+                                <button className=' btn text-white bg-red-800 hover:bg-red-800'  onClick={() => setSelected(fieldName, "")}>unselect</button>
+                            :
+                                <button className=' btn text-white bg-purple-700 hover:bg-purple-700'  onClick={() => setSelected(fieldName, element["_id"])}>select</button>
+                            }
+                        </>
+                    }
+                    </div>
+                </div>
+            </div>
+        )
     }
 
 
@@ -49,30 +96,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
             :
             <>
                 {playerCharacters.map((element, index) => (
-                    <div key={index} className="card card-compact w-[250px] flex-none bg-base-100 shadow-xl">
-                        <figure><img src={`data:image/jpeg;base64,${element?.image_base64}`} /></figure>
-                        <div className="card-body">
-                            <h2 className="card-title font-Comfortaa">{element["name"]}</h2>
-                            <div className="card-actions justify-end">
-                            {(type == "display") &&
-                                <>
-                                    <button onClick={() => navigate("/EditPlayerCharacter/:"+element["_id"])} className=' btn text-white bg-purple-700 hover:bg-purple-700'>Edit</button>
-                                    <button onClick={() => DeleteEntry("PlayerCharacters", element["_id"])} className=' btn text-white bg-red-800 hover:bg-red-800'>Delete</button>
-                                </>
-                            }
-
-                            {(type == "select") &&
-                                <>
-                                    { (element["_id"] == selectedId(fieldName) ) ?
-                                        <button className=' btn text-white bg-red-800 hover:bg-red-800'  onClick={() => setSelected(fieldName, "")}>unselect</button>
-                                    :
-                                        <button className=' btn text-white bg-purple-700 hover:bg-purple-700'  onClick={() => setSelected(fieldName, element["_id"])}>select</button>
-                                    }
-                                </>
-                            }
-                            </div>
-                        </div>
-                    </div>
+                    <Card element={element} key={index} />
                 ))}
             </>
             }

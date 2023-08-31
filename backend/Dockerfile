@@ -6,11 +6,9 @@ COPY requirements.txt ./
 RUN pip3 install -r requirements.txt
 
 COPY images ./images/
-COPY app.py ./
-COPY backend_functions.py ./
-COPY text_generation.py ./
+COPY scripts ./scripts/
 COPY .env ./
 
-ENTRYPOINT ["python3", "-u", "./app.py"]
+ENTRYPOINT ["python3", "-u", "./scripts/app.py"]
 
 # docker build -t vox-automata-backend:latest . 

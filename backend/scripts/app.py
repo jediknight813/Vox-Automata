@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend_functions import login_user, create_user, insert_entry, get_user_entries, remove_user_entry, get_single_user_entry, update_single_user_entry, get_user_game, update_game_messages, add_value_document
+from database.auth_functions import login_user, create_user
+from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry
+from database.game_functions import get_user_game, update_game_messages
+from database.image_functions import find_image_base64
 from text_generation import generate_response
 from dotenv import load_dotenv
 import os
+import requests
 load_dotenv()
 FRONTEND_URL = os.environ.get("FRONTEND_URL")
 MONGO_URL = os.environ.get("MONGO_URL")
@@ -93,14 +97,12 @@ async def get_game(data: dict):
     if data["username"] != gameData["username"]:
         return
     
-
     npc_response = generate_response(gameData, data["userMessage"])
 
     update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": data["userMessage"]})
     update_game_messages(data["username"], game_id, {"name": gameData["npc"]["name"], "type": "bot", "message": npc_response})
 
     return {"message": npc_response}
-
 
 
 @app.post("/get_user_entry")
@@ -122,6 +124,75 @@ async def get_entries(data: dict):
     data = data["params"]
     entries = get_user_entries(data["collection_name"], data["username"])
     return {"message": entries}
+
+
+# image routes
+
+
+@app.post("/get_image_base64")
+async def get_image_base64(data: dict):
+    data = data["params"]
+    entries = find_image_base64(data["image_id"])
+    return {"message": entries}
+
+
+# simple llama-cpp-server-routes
+
+# get models
+@app.post("/get_models")
+async def get_models():
+    url = "http://"+MONGO_URL+":4000/get_models"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        json_data = response.json()
+        return json_data["message"]
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+
+
+# load model
+@app.post("/load_model")
+async def load_model(data: dict):
+    data = data["params"]
+    url = "http://"+MONGO_URL+":4000/load_model/"+data["modal_name"]
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        json_data = response.json()
+        print(json_data)
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+
+
+# load model
+@app.post("/download_model")
+async def download_model(data: dict):
+    data = data["params"]
+    url = "http://"+MONGO_URL+":4000/download_model/"+data["author_name"]+"/"+data["author_repo"]+"/"+data["author_model"]
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        json_data = response.json()
+        print(json_data)
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+
+
+# unload model
+@app.post("/unload_model")
+async def unload_model():
+    url = "http://"+MONGO_URL+":4000/unload_model"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        json_data = response.json()
+        print(json_data)
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+
+
+# download model
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import React, {useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
-import { GetGame, GetBotResponse, UndoLastMessage, ResetStory } from '../../api/GameRoutes';
+import { GetGame, GetBotResponse, UndoLastMessage, ResetStory } from '../../api/GameRoutes'
+import { GetImage } from '../../api/UserRoutes';
 import Cookies from 'js-cookie';
 import ChatHistory from './ChatHistory';
 import SendMessage from './SendMessage';
@@ -12,6 +13,8 @@ const GamePage = () => {
     const [usernameValue, setUsername] = useState(undefined)
     const navigate = useNavigate()
     const [ userMessageValue, setUserMessageValue ] = useState("")
+    const [playerBase64ImageValue, setPlayerBase64ImageValue] = useState()
+    const [npcBase64ImageValue, setNpcBase64ImageValue] = useState()
 
 
     const SendUserMessage = () => {
@@ -73,6 +76,27 @@ const GamePage = () => {
     }, [usernameValue])
 
 
+    useEffect(() => {
+        var username = Cookies.get('username')
+        setUsername(username)
+        
+        if (gameData !== undefined ) {
+            const getPlayerImage = async () => {
+                var playerImg = await GetImage(gameData["player"]["image_base64_id"])
+                setPlayerBase64ImageValue(playerImg)
+            }
+            getPlayerImage()
+
+            const getNpcImage = async () => {
+                var npcImg = await GetImage(gameData["npc"]["image_base64_id"])
+                setNpcBase64ImageValue(npcImg)
+            }
+            getNpcImage()
+        }
+
+    }, [gameData])
+
+
     return (
         <>
         
@@ -91,10 +115,10 @@ const GamePage = () => {
         
             <div className=' w-full min-h-screen h-auto flex flex-col items-center'>
 
-                {(gameData != undefined) &&
+                {(gameData != undefined && playerBase64ImageValue != undefined && npcBase64ImageValue !== undefined) &&
                     <>
                         <div className=' w-[95%] h-[80vh] md:max-h-[600px] max-w-[800px] flex flex-col gap-5 mb-5 bg-slate-700'>
-                            <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]}/>
+                            <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue}/>
                             <SendMessage submitUserMessage={SendUserMessage} userMessageValue={userMessageValue} setUserMessageValue={setUserMessageValue}/>
                         </div>
                         

@@ -10,6 +10,7 @@ export const GetGame = async (_id, username) => {
     return response.data["message"]
 }
 
+
 export const GetBotResponse = async (gameData, username, userMessage) => {
     const response = await axios.post(apiUrl+"/get_bot_response", {
         params: {"gameData": gameData, "username": username, "userMessage": userMessage}

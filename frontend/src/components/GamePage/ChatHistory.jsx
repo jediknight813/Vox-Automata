@@ -2,7 +2,7 @@ import React from 'react'
 import DefaultProfileImage from "./images/DefaultProfileImage.png"
 
 
-const ChatHistory = ( { chat_messages, player_data, npc_data } ) => {
+const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image } ) => {
 
 
     const PlayerMessage = ({ player_name, message }) => {
@@ -11,7 +11,7 @@ const ChatHistory = ( { chat_messages, player_data, npc_data } ) => {
 
                 <div className="chat-image avatar">
                     <div className="w-10 rounded-full">
-                        <img src={`data:image/jpeg;base64,${player_data['image_base64']}`} />
+                        <img src={`data:image/jpeg;base64,${player_image}`} />
                     </div>
                 </div>
 
@@ -31,7 +31,7 @@ const ChatHistory = ( { chat_messages, player_data, npc_data } ) => {
 
                 <div className="chat-image avatar">
                     <div className="w-10 rounded-full">
-                        <img src={`data:image/jpeg;base64,${npc_data["image_base64"]}`} />
+                        <img src={`data:image/jpeg;base64,${npc_image}`} />
                     </div>
                 </div>
 
