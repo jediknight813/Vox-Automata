@@ -12,6 +12,7 @@ load_dotenv()
 FRONTEND_URL = os.environ.get("FRONTEND_URL")
 MONGO_URL = os.environ.get("MONGO_URL")
 import uvicorn
+import time
 
 
 app = FastAPI()
@@ -97,12 +98,14 @@ async def get_game(data: dict):
     if data["username"] != gameData["username"]:
         return
     
+    current_timestamp = int(time.time() * 1000)
+    timestamp_str = str(current_timestamp)
     npc_response = generate_response(gameData, data["userMessage"])
 
-    update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": data["userMessage"]})
-    update_game_messages(data["username"], game_id, {"name": gameData["npc"]["name"], "type": "bot", "message": npc_response})
+    update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": data["userMessage"], "timestamp": data["timestamp"]})
+    update_game_messages(data["username"], game_id, {"name": gameData["npc"]["name"], "type": "bot", "message": npc_response, "timestamp": timestamp_str})
 
-    return {"message": npc_response}
+    return {"message": {"response": npc_response, "timestamp": timestamp_str}}
 
 
 @app.post("/get_user_entry")

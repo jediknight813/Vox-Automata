@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react'
+import React, {useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import { GetGame, GetBotResponse, UndoLastMessage, ResetStory } from '../../api/GameRoutes'
 import { GetImage } from '../../api/UserRoutes';
@@ -12,29 +12,30 @@ const GamePage = () => {
     const [gameData, setGameData] = useState()
     const [usernameValue, setUsername] = useState(undefined)
     const navigate = useNavigate()
-    const [ userMessageValue, setUserMessageValue ] = useState("")
     const [playerBase64ImageValue, setPlayerBase64ImageValue] = useState()
     const [npcBase64ImageValue, setNpcBase64ImageValue] = useState()
+    const scrollRef = useRef(null);
 
 
-    const SendUserMessage = () => {
+    const SendUserMessage = (userMessageValue) => {
         if (userMessageValue == "") {
             return
         }
+        const currentTimestamp = new Date().getTime();
+        const timestampStr = currentTimestamp.toString();
         setGameData(gameData => ({
             ...gameData,
-            messages: [...gameData.messages, {"name": gameData["player"]["name"], "type": "user", "message": userMessageValue}]
+            messages: [...gameData.messages, {"name": gameData["player"]["name"], "type": "user", "message": userMessageValue, "timestamp": timestampStr}]
         }));
-        getBotResponseToPlayer()
-        setUserMessageValue("")
+        getBotResponseToPlayer(userMessageValue, timestampStr)
     }
 
 
-    const getBotResponseToPlayer = async () => {
-        const response = await GetBotResponse(GameId, usernameValue, userMessageValue)
+    const getBotResponseToPlayer = async (userMessageValue, timestampStr) => {
+        const response = await GetBotResponse(GameId, usernameValue, userMessageValue, timestampStr)
         setGameData(gameData => ({
             ...gameData,
-            messages: [...gameData.messages, {"name": gameData["npc"]["name"], "type": "bot", "message": response}]
+            messages: [...gameData.messages, {"name": gameData["npc"]["name"], "type": "bot", "message": response["response"], timestamp: response["timestamp"]}]
         }));
     }
 
@@ -97,6 +98,13 @@ const GamePage = () => {
     }, [gameData])
 
 
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [gameData]);
+
+
     return (
         <>
         
@@ -106,8 +114,8 @@ const GamePage = () => {
                     <h3 className="font-bold text-lg">This will reset the story.</h3>
                     <p className="py-4">Are you sure you want to continue?</p>
                     <div className="modal-action">
-                    <button onClick={() => CallResetStory()} className="btn">Confirm</button>
-                    <button className="btn">Close</button>
+                    <button onClick={() => CallResetStory()} className="btn outline-none border-none ">Confirm</button>
+                    <button className="btn outline-none border-none ">Close</button>
                     </div>
                 </form>
             </dialog>
@@ -117,17 +125,17 @@ const GamePage = () => {
 
                 {(gameData != undefined && playerBase64ImageValue != undefined && npcBase64ImageValue !== undefined) &&
                     <>
-                        <div className=' w-[95%] h-[80vh] md:max-h-[600px] max-w-[800px] flex flex-col gap-5 mb-5 bg-slate-700'>
-                            <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue}/>
-                            <SendMessage submitUserMessage={SendUserMessage} userMessageValue={userMessageValue} setUserMessageValue={setUserMessageValue}/>
+                        <div className=' w-[95%] h-[80vh] md:max-h-[600px] max-w-[800px] flex flex-col gap-5 mb-5 bg-website-primary'>
+                            <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue} scrollRef={scrollRef}/ >
+                            <SendMessage submitUserMessage={SendUserMessage} />
                         </div>
                         
                         {/* chat options */}
                         <div className=' flex flex-wrap w-full justify-center gap-5 mb-20'>
                             {(gameData["messages"].length >= 1) &&
                                 <>
-                                    <button onClick={() => undoLastMessage()} className=' btn'>Undo Last Message</button>
-                                    <button className="btn" onClick={ ()=> { window.my_modal_5.showModal()}}>Restart Story</button>
+                                    <button onClick={() => undoLastMessage()} className=' btn outline-none border-none  bg-website-primary text-white'>Undo Last Message</button>
+                                    <button className="btn outline-none border-none  bg-website-primary text-white" onClick={ ()=> { window.my_modal_5.showModal()}}>Restart Story</button>
                                 </>
                             }
                         </div>

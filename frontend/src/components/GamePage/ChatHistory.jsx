@@ -1,45 +1,74 @@
 import React from 'react'
-import DefaultProfileImage from "./images/DefaultProfileImage.png"
 
 
-const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image } ) => {
+const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image, scrollRef } ) => {
 
 
-    const PlayerMessage = ({ player_name, message }) => {
+    function formatTimestamp(timestampStr) {
+        const currentTimestamp = parseFloat(timestampStr); // Convert the input string to a number
+        if (isNaN(currentTimestamp)) {
+          return '';
+        }
+      
+        const currentDate = new Date(currentTimestamp);
+      
+        // Get hours and minutes
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+      
+        // Determine if it's AM or PM
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+        // Convert to 12-hour format
+        const formattedHours = hours % 12 || 12; // Handle midnight (0) as 12
+      
+        // Add leading zeros to minutes if needed
+        const formattedMinutes = String(minutes).padStart(2, '0');
+      
+        // Create the formatted time string
+        const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
+      
+        return formattedTime;
+    }
+
+
+    const PlayerMessage = ({ player_name, message, timestamp }) => {
         return (
             <div className="chat chat-start">
 
                 <div className="chat-image avatar">
                     <div className="w-10 rounded-full">
-                        <img src={`data:image/jpeg;base64,${player_image}`} />
+                        <img srcSet={`data:image/jpeg;base64,${player_image}`} loading="lazy "/>
                     </div>
                 </div>
 
-                <div className="chat-header font-Comfortaa">
-                    {player_name}
+                <div className="flex gap-2 chat-header font-Comfortaa">
+                    <h1>{formatTimestamp(timestamp)}</h1>
+                    <h1>{player_name}</h1>
                 </div>
 
-                <div className="chat-bubble bg-slate-900 text-white font-Comfortaa">{message}</div>
+                <div className="chat-bubble bg-website-secondary text-white font-Comfortaa">{message}</div>
 
             </div>
         )
     }
 
-    const BotMessage = ({ player_name, message }) => {
+    const BotMessage = ({ player_name, message, timestamp }) => {
         return (
             <div className="chat chat-end"> 
 
                 <div className="chat-image avatar">
                     <div className="w-10 rounded-full">
-                        <img src={`data:image/jpeg;base64,${npc_image}`} />
+                        <img srcSet={`data:image/jpeg;base64,${npc_image}`} loading="lazy" />
                     </div>
                 </div>
 
-                <div className="chat-header font-Comfortaa flex">
+                <div className="flex gap-2 chat-header font-Comfortaa">
+                    <h1>{formatTimestamp(timestamp)}</h1>
                     <h1>{player_name}</h1>
                 </div>
 
-                <div className="chat-bubble bg-slate-900 text-white font-Comfortaa">{message}</div>
+                <div className="chat-bubble bg-website-secondary text-white font-Comfortaa">{message}</div>
         </div>
         )
     }
@@ -47,14 +76,14 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
 
     return (
         <> 
-            <div className=' w-full flex flex-col max-h-[90%] rounded-md max-w-[98%] md:max-h-[600px] overflow-y-scroll scrollbar-thin scrollbar-track-slate-700 scrollbar-thumb-purple-800 p-2 gap-2'>
+            <div ref={scrollRef} className=' w-full flex flex-col max-h-[90%] rounded-md max-w-[98%] md:max-h-[600px] overflow-y-scroll scrollbar-thin scrollbar-track-website-primary scrollbar-thumb-purple-800 p-2 gap-2'>
                 {chat_messages.map((value, index) => (
                     <React.Fragment key={index}>
                         {value.type === "user" && (
-                            <PlayerMessage player_name={value.name} message={value.message} image_base64={value.image_base64} />
+                            <PlayerMessage player_name={value.name} message={value.message} timestamp={value?.timestamp} image_base64={value.image_base64} />
                         )}
                         {value.type === "bot" && (
-                            <BotMessage player_name={value.name} message={value.message} image_base64={value.image_base64} />
+                            <BotMessage player_name={value.name} message={value.message} timestamp={value?.timestamp} image_base64={value.image_base64} />
                         )}
                     </React.Fragment>
                 ))}

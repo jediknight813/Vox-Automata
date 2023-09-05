@@ -39,9 +39,9 @@ const NavBar = () => {
     return (
     <>
 
-        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+        <dialog id="my_modal_1" className="modal modal-bottom sm:modal-middle">
 
-        <form method="dialog" className="modal-box bg-slate-800">
+        <form method="dialog" className="modal-box bg-website-background">
             <h3 className="font-bold text-lg">Setting Menu</h3>
 
             <div className=' mt-2 flex flex-col gap-4'>
@@ -67,19 +67,19 @@ const NavBar = () => {
                 <input className=' input' placeholder="Author Repository" onChange={(e) => setModelFormData({ ...modelFormData, author_repo: e.target.value })} />
                 <input className=' input' placeholder="Author Model" onChange={(e) => setModelFormData({ ...modelFormData, author_model: e.target.value })}/>
                 
-                <button onClick={() => DownloadModel(modelFormData)} className='btn'>Start Download</button>
+                <button onClick={() => DownloadModel(modelFormData)} className='btn outline-none border-none '>Start Download</button>
             </div>
 
 
             <div className="modal-action">
-                <button className="btn">Close</button>
+                <button className="btn outline-none border-none ">Close</button>
             </div>
 
         </form>
         </dialog>
 
 
-        <div className="navbar bg-slate-900">
+        <div className="navbar bg-website-primary">
 
             <div className="flex-1">
                 <a onClick={() => navigate("/")} className="btn btn-ghost normal-case text-3xl font-sedgwick-ave-display">Vox Automata</a>
@@ -104,9 +104,9 @@ const NavBar = () => {
                             <img src={defaultProfileImage} />
                         </div>
                         </label>
-                        <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                        <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-website-primary rounded-box w-52">
                             <li onClick={() => navigate("/")}><a className="justify-between">Profile</a></li>
-                            <li><a onClick={()=>window.my_modal_5.showModal()}>Settings</a></li>
+                            <li><a onClick={()=>window.my_modal_1.showModal()}>Settings</a></li>
                             <li onClick={() => UserLogOut()}><a>Logout</a></li>
                         </ul>
                     </div>

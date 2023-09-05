@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Login, CreateUser } from '../api/UserRoutes'
 import Cookies from 'js-cookie'
@@ -9,6 +9,14 @@ const LoginAndSignUp = ( { type } ) => {
     const [username, setUsername] = useState("")
     const [password, setpassword] = useState("")
     const navigate = useNavigate()
+
+
+    useEffect(() => {
+        var username = Cookies.get('username')
+        if (username != undefined) {
+            navigate("/")
+        }
+    })
 
 
     const SubmitLoginInfo = async () => {
@@ -49,7 +57,7 @@ const LoginAndSignUp = ( { type } ) => {
     return (
         <div className=' w-full h-screen flex justify-center'>
             
-            <div className=' flex flex-col items-center mt-20 rounded-lg w-[95%] gap-4 bg-slate-900 h-[350px] md:w-[300px] p-5'>
+            <div className=' flex flex-col items-center mt-20 rounded-lg w-[95%] gap-4 bg-website-primary h-[350px] md:w-[300px] p-5'>
                 {type == "Login" ? 
                     <h1 className=' font-Comfortaa text-2xl'>Login</h1>
                     :
@@ -67,7 +75,7 @@ const LoginAndSignUp = ( { type } ) => {
                 </div>
                 
 
-                <button onClick={() => SubmitLoginInfo()} className=' btn bg-purple-700 hover:bg-purple-700 text-white font-Comfortaa cursor-pointer btn-sm transition duration-100 ease-in-out hover:-translate-y-[2px]'>
+                <button onClick={() => SubmitLoginInfo()} className=' btn outline-none border-none  bg-purple-700 hover:bg-purple-700 text-white font-Comfortaa cursor-pointer btn outline-none border-none -sm transition duration-100 ease-in-out hover:-translate-y-[2px]'>
                     {type == "Login" ? 
                         <h1 className=''>Login</h1>
                         :

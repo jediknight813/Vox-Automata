@@ -49,7 +49,7 @@ function App() {
     <link href="https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap" rel="stylesheet"></link>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet"></link>
 
-    <div className='flex flex-col items-center gap-4 bg-slate-800 w-full h-auto min-h-screen text-white'>
+    <div className='flex flex-col items-center gap-4 bg-website-background w-full h-auto min-h-screen text-white'>
       <BrowserRouter>
         <NavBar />
         <Routes>

@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState } from 'react';
+import React, { useReducer, useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
@@ -24,7 +24,8 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
     const navigate = useNavigate()
     const [usernameValue, setUsername] = useState()
     const { entryId } = useParams();
-        
+    
+    const FormLayout = FormKeys
 
     const handleInputChange = (event) => {
         const fieldName = event.target.id;
@@ -121,9 +122,9 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
             
             {(usernameValue !== undefined) &&
                 // form parent 
-                <div className='flex font-Comfortaa flex-col p-5 items-center w-full max-w-[600px] gap-5 bg-slate-900 h-auto min-h-[300px] mt-20 rounded-md'>
+                <div className='flex font-Comfortaa flex-col p-5 items-center w-full max-w-[600px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md'>
                     <h1 className=' text-xl'>{name}</h1>
-                    {FormKeys.map((element, index) => (
+                    {FormLayout.map((element, index) => (
                         <>
                             {/* for text input */}
                             {(element["type"] == "number" || element["type"] == "string" ) &&
@@ -153,18 +154,17 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
                                 </div>
                             )}
 
+                            {/* for rendering components */}
                             {(element["type"] === "other") &&
                                 <element.component type="select" username={usernameValue} setSelected={UpdateFormValue} selectedId={GetFormValue} fieldName={element["name"]} /> 
                             }
 
-
                         </>
                     ))}
 
-
                     <div className=' w-full flex items-center gap-4 justify-center mt-10'>
-                        <button onClick={() => navigate("/Hub")} className=' btn text-white bg-red-800 hover:bg-red-800'>Go Back</button>
-                        <button onClick={() => submitForm()} className=' btn text-white bg-purple-800 hover:bg-purple-800'>{(Type === "Edit") && "Update"}{(Type === "Create") && "Create"}</button>
+                        <button onClick={() => navigate("/Hub")} className=' btn outline-none border-none  text-white bg-red-800 hover:bg-red-800'>Go Back</button>
+                        <button onClick={() => submitForm()} className=' btn outline-none border-none  text-white bg-purple-800 hover:bg-purple-800'>{(Type === "Edit") && "Update"}{(Type === "Create") && "Create"}</button>
                     </div>
 
 
