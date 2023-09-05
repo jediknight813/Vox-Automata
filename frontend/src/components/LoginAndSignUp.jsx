@@ -28,6 +28,7 @@ const LoginAndSignUp = ( { type } ) => {
             if (response !== "user not found") {
                 Cookies.remove('username')
                 Cookies.set('username', response["username"])
+                window.location.reload()
             }
         }
 
@@ -37,6 +38,7 @@ const LoginAndSignUp = ( { type } ) => {
             if (response !== "user exists") {
                 Cookies.remove('username')
                 Cookies.set('username', response["username"])
+                window.location.reload()
             }
         }
 

@@ -7,7 +7,9 @@ from bson import ObjectId
 mongodb_url = os.environ.get("MONGO_URL")
 database = "VOX_AUTOMATA"
 import base64
+from PIL import Image
 import requests
+import io
 A1111_URL = os.getenv("A1111_URL")
 client = pymongo.MongoClient(mongodb_url, 27017)
 db = client[database]

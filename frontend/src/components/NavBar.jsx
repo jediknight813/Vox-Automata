@@ -14,13 +14,12 @@ const NavBar = () => {
         author_name: '',
         author_repo: '',
         author_model: '',
-      });
+    });
 
 
     useEffect(() => {
-        var username = Cookies.get('username')
+        const username = Cookies.get('username')
         setUsername(username)
-
 
         const getNpcImage = async () => {
             var models_response = await GetModels()
