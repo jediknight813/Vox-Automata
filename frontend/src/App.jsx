@@ -8,6 +8,7 @@ import NpcCharacterCard from "./components/HubCards/NpcCharacterCard"
 import PlayerCharacterCard from "./components/HubCards/PlayerCharacterCard"
 import SenarioCard from "./components/HubCards/ScenarioCard"
 import GamePage from "./components/GamePage/GamePage"
+import ScenarioFormAI from "./components/AI-Form/ScenarioFormAI"
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
           <Route path="/Login" element={<LoginAndSignUp type="Login" />} />
           <Route path="/Sign-Up" element={<LoginAndSignUp type="SignUp" />} />
           <Route path="/Hub" element={<Hub />} />
+          <Route path="/ScenarioFormAI" element={<ScenarioFormAI />} />
 
 
           {/* create and edit routes for player characters */}

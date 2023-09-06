@@ -5,6 +5,7 @@ from database.user_functions import insert_entry, remove_user_entry, get_single_
 from database.game_functions import get_user_game, update_game_messages
 from database.image_functions import find_image_base64
 from text_generation import generate_response
+from chat_gpt import getChatGPTResponse
 from dotenv import load_dotenv
 import os
 import requests
@@ -16,6 +17,7 @@ import time
 
 
 app = FastAPI()
+
 
 origins = [
     # FRONTEND_URL,
@@ -98,9 +100,10 @@ async def get_game(data: dict):
     if data["username"] != gameData["username"]:
         return
     
+
+    npc_response = generate_response(gameData, data["userMessage"])
     current_timestamp = int(time.time() * 1000)
     timestamp_str = str(current_timestamp)
-    npc_response = generate_response(gameData, data["userMessage"])
 
     update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": data["userMessage"], "timestamp": data["timestamp"]})
     update_game_messages(data["username"], game_id, {"name": gameData["npc"]["name"], "type": "bot", "message": npc_response, "timestamp": timestamp_str})
@@ -195,7 +198,12 @@ async def unload_model():
         print(f"Error: {e}")
 
 
-# download model
+# chat gpt routes
+@app.post("/get_chat_gpt_response")
+async def get_chat_gpt_response(data: dict):
+    data = data["params"]
+    response = getChatGPTResponse(data["PromptList"])
+    return {"message": response}
 
 
 if __name__ == "__main__":

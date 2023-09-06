@@ -11,14 +11,17 @@ TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
 MODIFIER = os.environ.get("MODIFIER")
 
 # Ai setup.
-os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
-os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
-os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
+
 import guidance
 guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
 
 
 def generate_response(gameData, userMessage):
+
+    os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
+    os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
+    os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
+
     chat_history_string = create_chat_history_string(gameData)
 
     response = guidance('''
