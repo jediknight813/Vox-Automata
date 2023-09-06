@@ -84,15 +84,12 @@ db = client[database]
 
 # 64eff3f2be94d94f49fac3b8
 
-# collection = db["PlayerCharacters"]
-# all_documents = collection.find()
+collection = db["Scenarios"]
+all_documents = collection.find()
 
-# for character in all_documents:
-#      # sets the time it was last modified
-#     time.sleep(1)
-#     current_timestamp = int(time.time() * 1000)
-#     timestamp_str = str(current_timestamp)
-#     add_value_document("PlayerCharacters", character["_id"], "last_modified", timestamp_str)
+for character in all_documents:
+    character = handle_image_generation("Scenarios", character, "new")
+    add_value_document("Scenarios", character["_id"], "image_base64_id", character["image_base64_id"])
 
 
 # Games

@@ -138,7 +138,7 @@ const ScenarioFormAI = () => {
                     {(scenario !== "") &&
                         <div className=' w-full min-h-[300px] h-auto flex items-center gap-2 flex-col'>
                             <h1>Generated Scenario</h1>
-                            <textarea onBlur={(e)=> setScenario(e.target.value)} className=' input w-full min-h-[300px] p-5 text-white font-Comfortaa h-auto flex-none' />
+                            <textarea value={scenario} onBlur={(e)=> setScenario(e.target.value)} className=' input w-full min-h-[300px] p-5 text-white font-Comfortaa h-auto flex-none' />
                         </div>
                     }
 

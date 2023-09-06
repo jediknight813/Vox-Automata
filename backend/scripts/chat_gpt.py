@@ -1,10 +1,10 @@
 import openai
 import os
-ORGANIZATION = os.environ.get("ORGANIZATION")
-API_KEY = os.environ.get("API_KEY")
 
 
 def getChatGPTResponse(PromptList):
+    ORGANIZATION = os.environ.get("ORGANIZATION")
+    API_KEY = os.environ.get("API_KEY")
     openai.organization = ORGANIZATION
     openai.api_key = API_KEY
 

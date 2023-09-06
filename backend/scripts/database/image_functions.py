@@ -13,6 +13,7 @@ import io
 A1111_URL = os.getenv("A1111_URL")
 client = pymongo.MongoClient(mongodb_url, 27017)
 db = client[database]
+from text_generation import generate_scenario_location
 
 
 def insert_image(data):
@@ -53,7 +54,7 @@ def update_image_base64(document_id, field_value):
 
 
 
-def handle_image_generation(collection_name, data, type, image_id=None): 
+def handle_image_generation(collection_name, data, type): 
     image_generated = False
     base64_encoded = ""
 
@@ -79,7 +80,25 @@ def handle_image_generation(collection_name, data, type, image_id=None):
         if use_local_image_generation == True:
             image_path = generate_image_local(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, and is wearing {data["wearing"]}, detailed, amazing. ')
         else:
-            image_path = create_image_dream_studio(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, and is wearing {data["wearing"]}, detailed, amazing. ')
+            image_path = create_image_dream_studio(1024, 1024, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, and is wearing {data["wearing"]}, detailed, amazing. ')
+
+        with open(image_path, "rb") as image_file:
+            base64_encoded = base64.b64encode(image_file.read()).decode("utf-8")
+            os.remove(image_path)
+            image_generated = True
+
+
+    if collection_name == "Scenarios":
+        # generate background description.
+        response = generate_scenario_location(data["scenario"])
+
+        use_local_image_generation = check_url(url=f'{A1111_URL}/info')
+        print("is using local image gen: ", use_local_image_generation)
+
+        if use_local_image_generation == True:
+            image_path = generate_image_local(512, 512, response, "people, man, women, child, group of people, ")
+        else:
+            image_path = create_image_dream_studio(1024, 1024, response, "people, man, women, child, group of people, ")
 
         with open(image_path, "rb") as image_file:
             base64_encoded = base64.b64encode(image_file.read()).decode("utf-8")
@@ -94,11 +113,12 @@ def handle_image_generation(collection_name, data, type, image_id=None):
     if image_generated == True and type == "update":
         update_image_base64(data["image_base64_id"], base64_encoded) 
 
+
     return data
 
 
 # handle image generation locally.
-engine_id = "stable-diffusion-512-v2-1"
+engine_id = "stable-diffusion-xl-1024-v1-0"
 api_host = os.getenv('API_HOST', 'https://api.stability.ai')
 api_key = os.getenv("STABILITY_API_KEY")
 
@@ -108,7 +128,7 @@ A1111_URL = os.getenv("A1111_URL")
 if api_key is None:
     raise Exception("Missing Stability API key.")
 
-def create_image_dream_studio(width, height, prompt):
+def create_image_dream_studio(width, height, prompt, NegativePrompt=""):
     response = requests.post(
         f"{api_host}/v1/generation/{engine_id}/text-to-image",
         headers={
@@ -120,6 +140,10 @@ def create_image_dream_studio(width, height, prompt):
             "text_prompts": [
                 {
                     "text": prompt
+                },
+                {
+                    "text": NegativePrompt+", blurry, badsfew",
+                    "weight": -1
                 }
             ],
             "cfg_scale": 7,
@@ -127,7 +151,7 @@ def create_image_dream_studio(width, height, prompt):
             "height": int(height),
             "width": int(width),
             "samples": 1,
-            "steps": 25,
+            "steps": 40,
         },
     )
 
@@ -153,10 +177,10 @@ def create_image_dream_studio(width, height, prompt):
     return image_path
 
 
-def generate_image_local(width, height, prompt):
+def generate_image_local(width, height, prompt, NegativePrompt=""):
     payload = {
         "prompt": prompt,
-        "negative_prompt": "3d, disfigured, bad art, deformed, poorly drawn, strange colors, blurry, boring, lackluster, repetitive, cropped.",
+        "negative_prompt": NegativePrompt+" 3d, disfigured, bad art, deformed, poorly drawn, strange colors, blurry, boring, lackluster, repetitive, cropped.",
         "batch_size": 1,
         "steps": 25,
         "height": height,

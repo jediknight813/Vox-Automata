@@ -38,6 +38,15 @@ Pygmalion2Format = guidance('''
 ''')
 
 
+ScenarioLocation = guidance('''
+    ### Instruction:
+    Your job in is extract the describe location details from a given scenario, only return the details of this location, don't include people, don't explain yourself.
+
+    Scenario: {{scenario}}.
+    ### Response:
+    The background has {{~gen 'response' temperature=0.8 stop='\n' max_tokens=100 }}
+''')
+
 # <|system|>Enter RP mode. Pretend to be {{char}} whose persona follows:
 # {{persona}}
 

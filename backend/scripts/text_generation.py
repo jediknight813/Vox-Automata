@@ -2,16 +2,31 @@ import os
 from dotenv import load_dotenv
 import json
 load_dotenv()
-from PromptFormating import AlpacaFormat, Pygmalion2Format
+from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation
 
 
-TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
-MODIFIER = os.environ.get("MODIFIER")
+
+def generate_scenario_location(scenario):
+    import guidance
+    TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
+    os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
+    os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
+    os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
+    guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
+
+    ai_response = ScenarioLocation(
+        scenario=scenario,
+    )
+
+    bot_response = ai_response.variables()["response"].strip()
+    return bot_response
 
 
 def generate_response(gameData, userMessage, promptFormat="Alpaca"):
     print(promptFormat)
     import guidance
+    TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
+    MODIFIER = os.environ.get("MODIFIER")
     os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
     os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
     os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL

@@ -44,33 +44,51 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
                 <>
                 </>
             )
-        }
-
+        }  
 
         return (
-            <div key={key} className="card card-compact w-[250px] flex-none bg-website-secondary shadow-xl">
-                <figure><img src={`data:image/jpeg;base64,${base64Image}`} /></figure>
-                <div className="card-body">
-                    <h2 className="card-title font-Comfortaa">{element["name"]}</h2>
-                    <div className="card-actions justify-end">
-                    {(type == "display") &&
-                        <>
-                            <button onClick={() => navigate("/EditPlayerCharacter/:"+element["_id"])} className=' btn outline-none border-none  text-white bg-purple-700 hover:bg-purple-700'>Edit</button>
-                            <button onClick={() => DeleteEntry("PlayerCharacters", element["_id"])} className=' btn outline-none border-none  text-white bg-red-800 hover:bg-red-800'>Delete</button>
-                        </>
-                    }
+            <div className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10">
+                <figure>
+                    <img
+                    src={`data:image/jpeg;base64,${base64Image}`}
+                    className="w-96 h-[400px] rounded-xl rounded-bl-xl rounded-br-xl"
+                    alt="Image"
+                    />
+                </figure>
 
-                    {(type == "select") &&
-                        <>
-                            { (element["_id"] == selectedId(fieldName) ) ?
-                                <button className=' btn outline-none border-none  text-white bg-red-800 hover:bg-red-800'  onClick={() => setSelected(fieldName, "")}>unselect</button>
-                            :
-                                <button className=' btn outline-none border-none  text-white bg-purple-700 hover:bg-purple-700'  onClick={() => setSelected(fieldName, element["_id"])}>select</button>
-                            }
-                        </>
-                    }
+                <div className="absolute bottom-0 w-[350px] h-[100px] bg-opacity-90 z-10 bg-blur backdrop-filter backdrop-blur-3xl text-lg flex flex-col items-center rounded-bl-xl rounded-br-xl">
+                    
+                    <div className="flex flex-col w-[95%] mt-1 gap-2">
+
+                        <div className="flex gap-2 items-center">
+                            <h1 className="-mb-2 font-Comfortaa">{element["name"]}</h1>
+                            <div className="text-sm self-center bg-blue-500 bg mt-2 pr-2 pl-2 rounded-md">
+                            {(element["wearing"] + element["name"] + element["gender"] + element["age"]).length} Tokens
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4 mt-2">
+                            {type === "display" && (
+                            <>
+                                <button onClick={() => navigate(`/EditPlayerCharacter/:${element["_id"]}`)} className="btn outline-none border-none text-white bg-purple-700 hover:bg-purple-700 btn-sm">Edit</button>
+                                <button onClick={() => DeleteEntry("PlayerCharacters", element["_id"])} className="btn outline-none border-none text-white bg-red-800 hover:bg-red-800 btn-sm">Delete</button>
+                            </>
+                            )}
+
+                            {type === "select" && (
+                            <>
+                                {element["_id"] === selectedId(fieldName) ? (
+                                <button className="btn outline-none border-none text-white bg-red-800 hover:bg-red-800 btn-sm" onClick={() => setSelected(fieldName, "")}>Unselect</button>
+                                ) : (
+                                <button className="btn outline-none border-none text-white bg-purple-700 hover:bg-purple-700 btn-sm" onClick={() => setSelected(fieldName, element["_id"])}>Select</button>
+                                )}
+                            </>
+                            )}
+                        </div>
+
                     </div>
                 </div>
+
             </div>
         )
     }

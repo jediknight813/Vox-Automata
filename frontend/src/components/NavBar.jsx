@@ -77,7 +77,7 @@ const NavBar = () => {
             </div>
 
             <div className=' mt-2 flex flex-col gap-4'>
-                <h1>Model Selection</h1>
+                <h1>Prompt Format</h1>
                 <select className=' input' value={currentPromptFormat} onChange={(e) => updatePromptFormat(e.target.value)}>
                     <option value="">Select a prompt format.</option>
                     {PromptFormats.map((name, index) => (
