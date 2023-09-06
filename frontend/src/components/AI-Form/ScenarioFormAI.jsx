@@ -19,7 +19,7 @@ const ScenarioFormAI = () => {
     const [npcData, setNpcData] = useState()
     const [scenarioPrompt, setSenarioPrompt] = useState("")
     const [scenario, setScenario] = useState("")
-    
+    const [isLoading, setIsloading] = useState(false)
 
     const GetId = (keyName) => {
         if (keyName == "player"){
@@ -42,10 +42,12 @@ const ScenarioFormAI = () => {
 
 
     const generateScenario = async () => {
+        setIsloading(true)
         try {
           const PromptList = FormatPromptForScenario(playerData, npcData, scenarioPrompt);
           const response = await GetChatGptResponse(PromptList);
           setScenario(response)
+          setIsloading(false)
         } catch (error) {
           console.error(error);
         }
@@ -56,7 +58,7 @@ const ScenarioFormAI = () => {
         if (scenarioNameValue == "" || npcId == undefined || playerId == undefined){
             return
         }
-
+        setIsloading(true)
         try {
             var data = {
                 "field_name": "Scenarios",
@@ -68,6 +70,7 @@ const ScenarioFormAI = () => {
             }
             const response = await CreateEntry(data);
             console.log(response)
+            setIsloading(false)
             navigate("/")
         } catch (error) {
           console.error(error);
@@ -116,7 +119,13 @@ const ScenarioFormAI = () => {
             {(usernameValue !== undefined) &&
                 // form parent 
                 <div className='flex font-Comfortaa flex-col p-5 items-center w-full max-w-[600px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md mb-20'>
-                
+                    
+                    {isLoading && (
+                        <div className='fixed inset-0 flex items-center justify-center bg-slate-900 bg-opacity-60'>
+                            <span className="loading loading-dots loading-lg"></span>
+                        </div>
+                    )}
+
                     <h1 className=' font-Comfortaa text-2xl'> Generate Scenario</h1>
 
                     {/* scenario name field. */}

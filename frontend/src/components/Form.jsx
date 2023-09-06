@@ -24,6 +24,7 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
     const navigate = useNavigate()
     const [usernameValue, setUsername] = useState()
     const { entryId } = useParams();
+    const [isLoading, setIsloading] = useState(false)
     
     const FormLayout = FormKeys
 
@@ -99,6 +100,8 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
             return
         }
 
+        setIsloading(true)
+
         if (Type == "Create") {
             data["field_name"] = fieldName
             data["username"] = usernameValue
@@ -112,6 +115,7 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
             const response = await updateUserEntry(fieldName, data["_id"], usernameValue, data)
             console.log(response)
         }
+        setIsloading(false)
         
         navigate("/")
     }
@@ -123,6 +127,13 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
             {(usernameValue !== undefined) &&
                 // form parent 
                 <div className='flex font-Comfortaa flex-col p-5 items-center w-full max-w-[600px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md'>
+                    
+                    {isLoading && (
+                        <div className='fixed inset-0 flex items-center justify-center bg-slate-900 bg-opacity-60'>
+                            <span className="loading loading-dots loading-lg"></span>
+                        </div>
+                    )}
+
                     <h1 className=' text-xl'>{name}</h1>
                     {FormLayout.map((element, index) => (
                         <>

@@ -65,7 +65,7 @@ def handle_image_generation(collection_name, data, type):
         if use_local_image_generation == True:
             image_path = generate_image_local(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, {data["appearance"]}, and is wearing {data["wearing"]}, detailed, amazing. ')
         else:
-            image_path = create_image_dream_studio(512, 512, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, {data["appearance"]}, and is wearing {data["wearing"]}, detailed, amazing. ')
+            image_path = create_image_dream_studio(1024, 1024, f'{data["gender"]} {data["age"]} portrait, half body, headshot, facing camera, {data["appearance"]}, and is wearing {data["wearing"]}, detailed, amazing. ')
 
 
         with open(image_path, "rb") as image_file:
@@ -96,9 +96,9 @@ def handle_image_generation(collection_name, data, type):
         print("is using local image gen: ", use_local_image_generation)
 
         if use_local_image_generation == True:
-            image_path = generate_image_local(512, 512, response, "people, man, women, child, group of people, ")
+            image_path = generate_image_local(512, 512, response, "people, man, women, child, group of people, comic, panel, comic panel, split, ")
         else:
-            image_path = create_image_dream_studio(1024, 1024, response, "people, man, women, child, group of people, ")
+            image_path = create_image_dream_studio(1024, 1024, response, "people, man, women, child, group of people, comic, panel, comic panel, split,  ")
 
         with open(image_path, "rb") as image_file:
             base64_encoded = base64.b64encode(image_file.read()).decode("utf-8")
