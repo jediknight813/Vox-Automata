@@ -32,7 +32,7 @@ const GamePage = () => {
 
 
     const getBotResponseToPlayer = async (userMessageValue, timestampStr) => {
-        const response = await GetBotResponse(GameId, usernameValue, userMessageValue, timestampStr)
+        const response = await GetBotResponse(GameId, usernameValue, userMessageValue, timestampStr, Cookies.get('PromptFormat'))
         setGameData(gameData => ({
             ...gameData,
             messages: [...gameData.messages, {"name": gameData["npc"]["name"], "type": "bot", "message": response["response"], timestamp: response["timestamp"]}]

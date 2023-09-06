@@ -101,8 +101,7 @@ async def get_game(data: dict):
     if data["username"] != gameData["username"]:
         return
     
-
-    npc_response = generate_response(gameData, data["userMessage"])
+    npc_response = generate_response(gameData, data["userMessage"], data["PromptFormat"])
     current_timestamp = int(time.time() * 1000)
     timestamp_str = str(current_timestamp)
 

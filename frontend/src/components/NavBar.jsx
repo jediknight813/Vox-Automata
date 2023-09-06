@@ -15,6 +15,8 @@ const NavBar = () => {
         author_repo: '',
         author_model: '',
     });
+    const PromptFormats = ["Alpaca", "Pygmalion2Format"]
+    const [currentPromptFormat, setPromptFormat] = useState()
 
 
     useEffect(() => {
@@ -28,11 +30,25 @@ const NavBar = () => {
         }
         getNpcImage()
 
+        const PromptFormat = Cookies.get('PromptFormat')
+        if (PromptFormat == undefined) {
+            Cookies.set("PromptFormat", PromptFormats[0])
+            setPromptFormat(PromptFormat[0])
+        }
+        else{
+            setPromptFormat(PromptFormat)
+        }
+
     }, [])
 
     const UserLogOut = () => {
         Cookies.remove('username')
         window.location.reload()
+    }
+
+    const updatePromptFormat = (format) => {
+        Cookies.set("PromptFormat", format)
+        setPromptFormat(format)
     }
     
 
@@ -49,15 +65,27 @@ const NavBar = () => {
                 <select className=' input' value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
                     <option value="">Select a model</option>
                     {models.map((model, index) => (
-                    <option key={index} value={model}>
-                        {model}
-                    </option>
+                        <option key={index} value={model}>
+                            {model}
+                        </option>
                     ))}
                 </select>
                 <div className=' flex gap-3 items-center'>
                     <button onClick={() => UnloadModels()} className=' btn'>Unload Model</button>
                     <button onClick={() => LoadModel(selectedModel)} className=' btn'>Load Model</button>
                 </div>
+            </div>
+
+            <div className=' mt-2 flex flex-col gap-4'>
+                <h1>Model Selection</h1>
+                <select className=' input' value={currentPromptFormat} onChange={(e) => updatePromptFormat(e.target.value)}>
+                    <option value="">Select a prompt format.</option>
+                    {PromptFormats.map((name, index) => (
+                        <option key={index} value={name}>
+                            {name}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             <div className=' flex flex-col gap-3'>

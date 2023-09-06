@@ -2,48 +2,52 @@ import os
 from dotenv import load_dotenv
 import json
 load_dotenv()
+from PromptFormating import AlpacaFormat, Pygmalion2Format
 
 
 TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
 MODIFIER = os.environ.get("MODIFIER")
 
 
-def generate_response(gameData, userMessage):
+def generate_response(gameData, userMessage, promptFormat="Alpaca"):
+    print(promptFormat)
     import guidance
     os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
     os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
     os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
     guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
 
-    chat_history_string = create_chat_history_string(gameData)
+    
+    if promptFormat == "Alpaca":
+        chat_history_string = create_chat_history_string(gameData)
+        npc_response = AlpacaFormat(
+            npc_name=gameData["npc"]["name"],
+            npc_persona=create_npc_persona(gameData["npc"]),
+            player_name=gameData["player"]["name"],
+            scenario=gameData["scenario"]["scenario"],
+            question=userMessage,
+            history=chat_history_string,
+            modifier=MODIFIER
+        )
 
-    response = guidance('''
-        ### Instruction:
-        {{npc_name}}'s Persona: {{npc_persona}}, {{npc_name}} is currently with {{player_name}}.
+        bot_response = npc_response.variables()["response"].strip()
 
-        Scenario: {{scenario}}.
-        {{modifier}}
+        return bot_response
 
-        {{history}}
-        {{player_name}}: {{question}}
+    if promptFormat == "Pygmalion2Format":
+        chat_history_string = create_chat_history_string(gameData, "<|user|> ", "<|model|> ")
+        npc_response = Pygmalion2Format(
+            npc_name=gameData["npc"]["name"],
+            npc_persona=create_npc_persona(gameData["npc"]),
+            player_name=gameData["player"]["name"],
+            scenario=gameData["scenario"]["scenario"],
+            question=userMessage,
+            history=chat_history_string,
+        )
 
-        ### Response:
-        {{npc_name}}: {{~gen 'response' temperature=0.8 stop='\n' }}
-    ''')
+        bot_response = npc_response.variables()["response"].strip()
 
-    npc_response = response(
-        npc_name=gameData["npc"]["name"],
-        npc_persona=create_npc_persona(gameData["npc"]),
-        player_name=gameData["player"]["name"],
-        scenario=gameData["scenario"]["scenario"],
-        question=userMessage,
-        history=chat_history_string,
-        modifier=MODIFIER
-    )
-
-    bot_response = npc_response.variables()["response"].strip()
-
-    return bot_response
+        return bot_response
 
 
 def create_npc_persona(npcData):
@@ -53,14 +57,14 @@ def create_npc_persona(npcData):
     return persona
 
 
-def create_chat_history_string(gameData):
+def create_chat_history_string(gameData, player_prefix="", npc_prefix=""):
     chat_history_string = ""
 
     if len(gameData["messages"]) >= 1:
         for message in gameData["messages"]:
             if message["type"] == "bot":
-                chat_history_string += "\n"+gameData["npc"]["name"]+": "+message["message"] 
+                chat_history_string += "\n"+npc_prefix+gameData["npc"]["name"]+": "+message["message"] 
             if message["type"] == "user":
-                chat_history_string += "\n"+gameData["player"]["name"]+": "+message["message"]
+                chat_history_string += "\n"+player_prefix+gameData["player"]["name"]+": "+message["message"]
     
     return chat_history_string
