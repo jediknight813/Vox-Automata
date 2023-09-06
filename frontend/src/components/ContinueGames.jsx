@@ -10,7 +10,9 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
 
     useEffect(() => {
         const GameCharacterEntrys = async () => {
-            setGame(await GetEntries("Games", username))
+            var response = await GetEntries("Games", username)
+            response = response.sort((a, b) => b.last_modified - a.last_modified);
+            setGame(response)
         }
         GameCharacterEntrys()
 

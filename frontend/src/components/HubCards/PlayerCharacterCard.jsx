@@ -11,7 +11,9 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
 
     useEffect(() => {
         const playerCharacterEntrys = async () => {
-            setPlayerCharacters(await GetEntries("PlayerCharacters", username))
+            var response = await GetEntries("PlayerCharacters", username)
+            response = response.sort((a, b) => b.last_modified - a.last_modified);
+            setPlayerCharacters(response)
         }
         playerCharacterEntrys()
     }, [username])

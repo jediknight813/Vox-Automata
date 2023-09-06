@@ -11,7 +11,9 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
 
     useEffect(() => {
         const NpcCharacterEntrys = async () => {
-            setNpcCharacters(await GetEntries("NpcCharacters", username))
+            var response = await GetEntries("NpcCharacters", username)
+            response = response.sort((a, b) => b.last_modified - a.last_modified);
+            setNpcCharacters(response)
         }
         NpcCharacterEntrys()
 

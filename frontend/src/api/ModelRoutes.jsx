@@ -25,6 +25,4 @@ export const DownloadModel = async (modal_data) => {
     const response = await axios.post(apiUrl+"/download_model", {
         params: modal_data
     });
-    console.log(response)
-    return response.data["message"]
 }

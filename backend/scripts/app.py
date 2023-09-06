@@ -48,6 +48,7 @@ async def create_entry(data: dict):
     data = data["params"]
     collection_name = data["field_name"]
     data.pop("field_name")
+
     return {"message": insert_entry(data, collection_name)}
 
 

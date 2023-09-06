@@ -98,13 +98,6 @@ const GamePage = () => {
     }, [gameData])
 
 
-    useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-        }
-    }, [gameData]);
-
-
     return (
         <>
         

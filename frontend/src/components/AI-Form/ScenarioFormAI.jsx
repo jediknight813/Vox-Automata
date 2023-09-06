@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import NpcCharacterCard from '../HubCards/NpcCharacterCard'
@@ -19,7 +19,7 @@ const ScenarioFormAI = () => {
     const [npcData, setNpcData] = useState()
     const [scenarioPrompt, setSenarioPrompt] = useState("")
     const [scenario, setScenario] = useState("")
-
+    
 
     const GetId = (keyName) => {
         if (keyName == "player"){
@@ -122,7 +122,7 @@ const ScenarioFormAI = () => {
                     {/* scenario name field. */}
                     <div className=' md:w-[95%] w-full flex gap-2 items-center'>
                         <h1>Name</h1>
-                        <input value={scenarioNameValue} onChange={(e) => setScenarioNameValue(e.target.value)} type='text' placeholder='enter scenario name.' className=' input w-[70%]'/>
+                        <input onBlur={(e) => setScenarioNameValue(e.target.value)} type='text' placeholder='enter scenario name.' className=' input w-[70%]'/>
                     </div>
 
 
@@ -132,13 +132,13 @@ const ScenarioFormAI = () => {
                     {/* scenario prompt field. */}
                     <div className=' md:w-[95%] w-full flex gap-2 items-center'>
                         <h1>senario prompt</h1>
-                        <input value={scenarioPrompt} onChange={(e) => setSenarioPrompt(e.target.value)} type='text' placeholder='enter scenario prompt.' className=' input w-[70%]'/>
+                        <input onBlur={(e) => setSenarioPrompt(e.target.value)} type='text' placeholder='enter scenario prompt.' className=' input w-[70%]'/>
                     </div>
 
                     {(scenario !== "") &&
                         <div className=' w-full min-h-[300px] h-auto flex items-center gap-2 flex-col'>
                             <h1>Generated Scenario</h1>
-                            <textarea value={scenario} className=' input w-full min-h-[300px] p-5 text-white font-Comfortaa h-auto flex-none' />
+                            <textarea onBlur={(e)=> setScenario(e.target.value)} className=' input w-full min-h-[300px] p-5 text-white font-Comfortaa h-auto flex-none' />
                         </div>
                     }
 

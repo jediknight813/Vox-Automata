@@ -2,13 +2,23 @@ import os
 from dotenv import load_dotenv
 import json
 load_dotenv()
+from text_generation import create_npc_persona, create_chat_history_string
 
 
 TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
 MODIFIER = os.environ.get("MODIFIER")
 
+PromptFormats =  [
+    "Alpaca",
+    "Pygmalion-2"
+]
 
-def generate_response(gameData, userMessage):
+
+def get_prompt_formats():
+    return PromptFormats
+
+
+def AlpacaFormat(gameData, userMessage):
     import guidance
     os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
     os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
@@ -41,26 +51,11 @@ def generate_response(gameData, userMessage):
         modifier=MODIFIER
     )
 
-    bot_response = npc_response.variables()["response"].strip()
-
-    return bot_response
+    return npc_response.variables()["response"].strip()
 
 
-def create_npc_persona(npcData):
-    persona = f"{npcData['name'].capitalize()} is a {npcData['age']} {npcData['gender']} with a {npcData['appearance']} build. "
-    persona += f"{npcData['name'].capitalize()} has a {npcData['personality']} personality and is wearing {npcData['wearing']}."
-    
-    return persona
 
+# <|system|>Enter RP mode. Pretend to be {{char}} whose persona follows:
+# {{persona}}
 
-def create_chat_history_string(gameData):
-    chat_history_string = ""
-
-    if len(gameData["messages"]) >= 1:
-        for message in gameData["messages"]:
-            if message["type"] == "bot":
-                chat_history_string += "\n"+gameData["npc"]["name"]+": "+message["message"] 
-            if message["type"] == "user":
-                chat_history_string += "\n"+gameData["player"]["name"]+": "+message["message"]
-    
-    return chat_history_string
+# You shall reply to the user while staying in character, and generate long responses.

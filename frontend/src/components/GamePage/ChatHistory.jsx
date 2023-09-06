@@ -1,9 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 
 const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image, scrollRef } ) => {
 
+    useEffect(() => {
+        if (scrollRef.current) {
+          const element = scrollRef.current;
+    
+          // Calculate the distance to scroll
+          const distanceToScroll = element.scrollHeight - element.scrollTop;
+    
+          // Calculate the number of frames for the animation
+          const numFrames = 60; // You can adjust this number for the desired smoothness
+          const scrollInterval = distanceToScroll / numFrames;
+    
+          // Scroll smoothly
+          let frame = 0;
+          const scrollSmoothly = () => {
+            if (frame < numFrames) {
+              element.scrollTop += scrollInterval;
+              frame++;
+              requestAnimationFrame(scrollSmoothly);
+            }
+          };
+    
+          // Start the smooth scrolling animation
+          scrollSmoothly();
+        }
+      }, [scrollRef, chat_messages]);
 
+      
     function formatTimestamp(timestampStr) {
         const currentTimestamp = parseFloat(timestampStr); // Convert the input string to a number
         if (isNaN(currentTimestamp)) {

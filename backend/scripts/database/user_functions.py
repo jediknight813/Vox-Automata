@@ -12,11 +12,19 @@ A1111_URL = os.getenv("A1111_URL")
 client = pymongo.MongoClient(mongodb_url, 27017)
 db = client[database]
 from .image_functions import handle_image_generation
+import time
 
 
 def insert_entry(data, collection_name):
     data = handle_image_generation(collection_name, data, "new")
     collection = db[collection_name]
+
+    # sets the time it was last modified
+    current_timestamp = int(time.time() * 1000)
+    timestamp_str = str(current_timestamp)
+    data["last_modified"] = timestamp_str
+
+
     entry = collection.insert_one(data)
 
     if entry:
@@ -47,6 +55,12 @@ def get_single_user_entry(collection_name, username, _id):
     # Find documents where the 'username' field matches the provided username
     query = {"username": username, "_id": ObjectId(_id)}
     cursor = collection.find(query)
+
+    # sets the time it was last modified
+    current_timestamp = int(time.time() * 1000)
+    timestamp_str = str(current_timestamp)
+    
+    add_value_document(collection_name, _id, "last_modified", timestamp_str)
 
     for entry in cursor:
         entry["_id"] = str(entry["_id"])
@@ -88,6 +102,11 @@ def update_single_user_entry(collection_name, username, _id, new_entry):
     collection = db[collection_name]
     new_entry = handle_image_generation(collection_name, new_entry, "update")
     new_entry.pop("_id")
+
+    # sets the time it was last modified
+    current_timestamp = int(time.time() * 1000)
+    timestamp_str = str(current_timestamp)
+    new_entry["last_modified"] = timestamp_str
     
     # Find the document where the 'username' field matches the provided username and '_id' matches the given _id
     query = {"username": username, "_id": ObjectId(_id)}

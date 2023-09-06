@@ -10,6 +10,7 @@ A1111_URL = os.getenv("A1111_URL")
 client = pymongo.MongoClient(mongodb_url, 27017)
 db = client[database]
 from .user_functions import add_value_document, get_single_user_entry
+import time
 
 
 def get_user_game(collection_name, username, _id):
@@ -21,13 +22,18 @@ def get_user_game(collection_name, username, _id):
 
     if game_entry:
         game_entry["_id"] = str(game_entry["_id"])
-    
+
     if game_entry == None:
         return {"message": "game not found."}
 
     if "messages" not in game_entry:
         add_value_document(collection_name, _id, "messages", [])
         game_entry["messages"] = []
+
+    current_timestamp = int(time.time() * 1000)
+    timestamp_str = str(current_timestamp)
+    add_value_document(collection_name, _id, "last_modified", timestamp_str)
+
 
     Scenario = get_single_user_entry("Scenarios", username, game_entry["scenario"])
     Npc = get_single_user_entry("NpcCharacters", username, Scenario[0]["npc"])
@@ -41,7 +47,8 @@ def get_user_game(collection_name, username, _id):
         "scenario": Scenario[0],
         "player": Player[0],
         "npc": Npc[0],
-        "messages": game_entry["messages"]
+        "messages": game_entry["messages"],
+        "last_modified": timestamp_str
     }
 
     return {"message": data}
