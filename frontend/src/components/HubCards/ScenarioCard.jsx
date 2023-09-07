@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import { GetImage } from '../../api/UserRoutes'
 
 
-const ScenarioCard = ( { type, username } ) => {
+const ScenarioCard = ( { type, username, setSelected=undefined, selectedId="", fieldName="" } ) => {
     const [Scenario, setScenario] = useState([])
     const navigate = useNavigate()
     
+  
 
     useEffect(() => {
         const ScenarioCharacterEntrys = async () => {
