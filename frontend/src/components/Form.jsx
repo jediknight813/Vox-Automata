@@ -1,22 +1,42 @@
-import React, { useReducer, useEffect, useState, useMemo } from 'react';
+import React, { useReducer, useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
 import { CreateEntry, GetUserEntry, updateUserEntry } from '../api/FormRoutes';
+import { debounce } from 'lodash';
 
 
 const initialState = {};
 
-    const reducer = (data, action) => {
-        switch (action.type) {
-        case 'UPDATE_FIELD':
-            return { ...data, [action.fieldName]: action.value };
-        case 'UPDATE_FIELDS':
-            return { ...data, ...action.fields };
-        default:
-            return data;
-        }
-    };
+const reducer = (data, action) => {
+    switch (action.type) {
+    case 'UPDATE_FIELD':
+        return { ...data, [action.fieldName]: action.value };
+    case 'UPDATE_FIELDS':
+        return { ...data, ...action.fields };
+    default:
+        return data;
+    }
+};
+
+
+const useDebounce = (callback) => {
+    const ref = useRef();
+  
+    useEffect(() => {
+      ref.current = callback;
+    }, [callback]);
+  
+    const debouncedCallback = useMemo(() => {
+      const func = () => {
+        ref.current?.();
+      };
+  
+      return debounce(func, 1000);
+    }, []);
+  
+    return debouncedCallback;
+  };
 
 
 const Form = ( {FormKeys, Type, name, fieldName} ) => {
@@ -25,17 +45,11 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
     const [usernameValue, setUsername] = useState()
     const { entryId } = useParams();
     const [isLoading, setIsloading] = useState(false)
-    
     const FormLayout = FormKeys
-
-    const handleInputChange = (event) => {
-        const fieldName = event.target.id;
-        const value = event.target.value;
-        dispatch({ type: 'UPDATE_FIELD', fieldName, value });
-    };
 
 
     const UpdateFormValue = (fieldName, value) => {
+        console.log(fieldName, value)
         dispatch({ type: 'UPDATE_FIELD', fieldName, value });
     }
 
@@ -60,7 +74,6 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
             const Entry = async () => {
               if (usernameValue !== undefined) {
                 const entry_data = await GetUserEntry(fieldName, entryId.replace(":", ""), usernameValue);
-                
                 if (entry_data[0]["username"] != usernameValue) {
                     navigate("/")
                 }
@@ -77,6 +90,64 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
             Entry();
           }
     }, [usernameValue])
+    
+
+    // debouncer for text input field.
+    const InputField = ( {element, index, default_value, field_name, UpdateFormValue} ) => {
+        const [value, setValue] = useState(default_value)
+        
+
+        const debouncedRequest = useDebounce(() => {
+            UpdateFormValue(field_name, value)
+        });
+        
+
+        const onChange = (e) => {
+            const value = e.target.value;
+            setValue(value);
+            debouncedRequest();
+        };
+
+
+        return (
+            <div key={index} className='flex md:flex-row flex-col w-[90%] md:w-[60%] items-start gap-4 md:items-center'>
+                <h1>{element["name"]}:</h1>
+                <input type={element["type"]} value={value} id={field_name} className=' input input-sm' onChange={(e) => onChange(e)}/>
+            </div>
+        )
+    }
+
+        // debouncer for dropdown input field.
+        const DropdownInputField = ( {element, index, default_value, field_name, UpdateFormValue} ) => {
+            const [value, setValue] = useState(default_value)
+            
+    
+            const debouncedRequest = useDebounce(() => {
+                UpdateFormValue(field_name, value)
+            });
+            
+    
+            const onChange = (e) => {
+                const value = e.target.value;
+                setValue(value);
+                debouncedRequest();
+            };
+    
+    
+            return (
+                <div key={index} className='flex md:flex-row flex-col w-[90%] md:w-[60%] items-start gap-4 md:items-center'>
+                <h1>{element["name"]}:</h1>
+                <select id={field_name} value={value} className='input input-sm' onChange={(e) => onChange(e)}>
+                    <option value="">Select an option</option>
+                    {element["array_values"].map((value, subIndex) => (
+                        <option key={value} value={value}>
+                            {value}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            )
+        }
 
 
     const submitForm = async () => {
@@ -139,30 +210,12 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
                         <>
                             {/* for text input */}
                             {(element["type"] == "number" || element["type"] == "string" ) &&
-                                <div key={index} className='flex md:flex-row flex-col w-[90%] md:w-[60%] items-start gap-4 md:items-center'>
-                                    <h1>{element["name"]}:</h1>
-                                    <input type={element["type"]} id={element["name"]} value={data[element["name"]] || ''} className=' input input-sm' onChange={handleInputChange}/>
-                                </div>
+                                <InputField element={element} index={index} default_value={data[element["name"]]} field_name={element["name"]} UpdateFormValue={UpdateFormValue} />
                             }
 
                             {/* for drop down value */}
                             {(element["type"] === "array") && (
-                                <div key={index} className='flex md:flex-row flex-col w-[90%] md:w-[60%] items-start gap-4 md:items-center'>
-                                    <h1>{element["name"]}:</h1>
-                                    <select
-                                        id={element["name"]}
-                                        value={data[element["name"]] || ''}
-                                        className='input input-sm'
-                                        onChange={handleInputChange}
-                                    >
-                                        <option value="">Select an option</option>
-                                        {element["array_values"].map((value, subIndex) => (
-                                            <option key={value} value={value}>
-                                                {value}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                <DropdownInputField element={element} index={index} default_value={data[element["name"]]} field_name={element["name"]} UpdateFormValue={UpdateFormValue} />
                             )}
 
                             {/* for rendering components */}
