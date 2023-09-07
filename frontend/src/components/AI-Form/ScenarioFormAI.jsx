@@ -47,10 +47,11 @@ const ScenarioFormAI = () => {
           const PromptList = FormatPromptForScenario(playerData, npcData, scenarioPrompt);
           const response = await GetChatGptResponse(PromptList);
           setScenario(response)
-          setIsloading(false)
         } catch (error) {
           console.error(error);
-        }
+        } finally {
+            setIsloading(false);
+          }
       };
 
 
@@ -69,7 +70,6 @@ const ScenarioFormAI = () => {
                 "username": usernameValue
             }
             const response = await CreateEntry(data);
-            console.log(response)
             setIsloading(false)
             navigate("/")
         } catch (error) {
@@ -83,7 +83,6 @@ const ScenarioFormAI = () => {
         const getPlayerData = async () => {
             if (playerId != undefined && playerId != "") {
                 const playerData = await GetUserEntry("PlayerCharacters", playerId, usernameValue);
-                console.log(playerData)
                 setPlayerData(playerData[0])
             }
         }
@@ -93,7 +92,6 @@ const ScenarioFormAI = () => {
         const getNpcData = async () => {
             if (npcId != undefined && npcId != "") {
                 const npcData = await GetUserEntry("NpcCharacters", npcId, usernameValue);
-                console.log(npcData)
                 setNpcData(npcData[0])
             }
         }
@@ -121,7 +119,7 @@ const ScenarioFormAI = () => {
                 <div className='flex font-Comfortaa flex-col p-5 items-center w-full max-w-[600px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md mb-20'>
                     
                     {isLoading && (
-                        <div className='fixed inset-0 flex items-center justify-center bg-slate-900 bg-opacity-60'>
+                        <div className='fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-opacity-60'>
                             <span className="loading loading-dots loading-lg"></span>
                         </div>
                     )}
@@ -131,7 +129,7 @@ const ScenarioFormAI = () => {
                     {/* scenario name field. */}
                     <div className=' md:w-[95%] w-full flex gap-2 items-center'>
                         <h1>Name</h1>
-                        <input onBlur={(e) => setScenarioNameValue(e.target.value)} type='text' placeholder='enter scenario name.' className=' input w-[70%]'/>
+                        <input onBlur={(e) => setScenarioNameValue(e.target.value)} type='text' placeholder='enter scenario name.' className=' input w-[60%]'/>
                     </div>
 
 
@@ -141,13 +139,13 @@ const ScenarioFormAI = () => {
                     {/* scenario prompt field. */}
                     <div className=' md:w-[95%] w-full flex gap-2 items-center'>
                         <h1>senario prompt</h1>
-                        <input onBlur={(e) => setSenarioPrompt(e.target.value)} type='text' placeholder='enter scenario prompt.' className=' input w-[70%]'/>
+                        <input onBlur={(e) => setSenarioPrompt(e.target.value)} type='text' placeholder='enter scenario prompt.' className=' input w-[60%]'/>
                     </div>
 
                     {(scenario !== "") &&
                         <div className=' w-full min-h-[300px] h-auto flex items-center gap-2 flex-col'>
                             <h1>Generated Scenario</h1>
-                            <textarea value={scenario} onBlur={(e)=> setScenario(e.target.value)} className=' input w-full min-h-[300px] p-5 text-white font-Comfortaa h-auto flex-none' />
+                            <textarea value={scenario} onChange={(e)=> setScenario(e.target.value)} className=' input w-full min-h-[300px] p-5 text-white font-Comfortaa h-auto flex-none' />
                         </div>
                     }
 

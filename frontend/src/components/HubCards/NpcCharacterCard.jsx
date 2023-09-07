@@ -46,12 +46,12 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
             )
         }
 
-
         return (
             <div className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10">
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}
+                    loading="lazy"
                     className="w-96 h-[400px] rounded-xl rounded-bl-xl rounded-br-xl"
                     alt="Image"
                     />

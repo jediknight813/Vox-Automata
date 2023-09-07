@@ -52,6 +52,7 @@ const ScenarioCard = ( { type, username, setSelected=undefined, selectedId="", f
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}
+                    loading="lazy"
                     className="w-96 rounded-xl rounded-bl-xl rounded-br-xl"
                     alt="Image"
                     />

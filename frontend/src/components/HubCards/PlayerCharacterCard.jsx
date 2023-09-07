@@ -51,6 +51,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}
+                    loading="lazy"
                     className="w-96 h-[400px] rounded-xl rounded-bl-xl rounded-br-xl"
                     alt="Image"
                     />

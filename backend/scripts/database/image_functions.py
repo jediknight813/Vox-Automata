@@ -148,6 +148,7 @@ def create_image_dream_studio(width, height, prompt, NegativePrompt=""):
             ],
             "cfg_scale": 7,
             "clip_guidance_preset": "FAST_BLUE",
+            "style_preset": "anime",
             "height": int(height),
             "width": int(width),
             "samples": 1,
