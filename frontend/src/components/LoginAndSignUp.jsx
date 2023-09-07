@@ -27,20 +27,21 @@ const LoginAndSignUp = ( { type } ) => {
 
         if (type == "Login") {
             const response = await Login(username, password)
-            console.log(response)
             if (response["message"] === "login successful") {
                 Cookies.remove('username')
-                Cookies.set('username', response["username"])
+                Cookies.set('username', response["username"] , { expires: 7 })
+                Cookies.set('vox_automata_access_token', response["access_token"], { expires: 7 })
                 window.location.reload()
             }
         }
 
         if (type == "SignUp") {
             const response = await CreateUser(username, password)
-            console.log(response)
+
             if (response["message"] === "user created successfully") {
                 Cookies.remove('username')
-                Cookies.set('username', response["username"])
+                Cookies.set('username', response["username"], { expires: 7 })
+                Cookies.set('vox_automata_access_token', response["access_token"], { expires: 7 })
                 window.location.reload()
             }
         }

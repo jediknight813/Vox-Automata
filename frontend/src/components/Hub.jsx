@@ -15,7 +15,6 @@ const Hub = () => {
 
     useEffect(() => {
         var username = Cookies.get('username')
-        console.log(username)
         if (username == undefined) {
             navigate("/")
         }

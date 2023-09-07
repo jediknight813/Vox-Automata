@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from database.auth_functions import login_user, create_user
 from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry
@@ -7,6 +7,7 @@ from database.image_functions import find_image_base64
 from text_generation import generate_response
 from chat_gpt import getChatGPTResponse
 from dotenv import load_dotenv
+from jwt_token_creator import get_current_user
 import os
 import requests
 load_dotenv()
@@ -49,7 +50,7 @@ async def SignUp(data: dict):
 
 
 @app.post("/create_entry")
-async def create_entry(data: dict):
+async def create_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     collection_name = data["field_name"]
     data.pop("field_name")
@@ -58,21 +59,21 @@ async def create_entry(data: dict):
 
 
 @app.post("/remove_entry")
-async def remove_entry(data: dict):
+async def remove_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     entries = remove_user_entry(data["collection_name"], data["username"], data["_id"])
     return {"message": entries}
 
 
 @app.post("/get_game")
-async def get_game(data: dict):
+async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     entries = get_user_game(data["collection_name"], data["username"], data["_id"])
     return {"message": entries}
 
 
 @app.post("/undo_last_message")
-async def undo_last_message(data: dict):
+async def undo_last_message(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
 
     game_id = data["gameData"].replace(":", "")
@@ -88,7 +89,7 @@ async def undo_last_message(data: dict):
 
 
 @app.post("/reset_story")
-async def undo_last_message(data: dict):
+async def undo_last_message(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     game_id = data["gameData"].replace(":", "")
     add_value_document("Games", game_id, "messages", [])
@@ -96,7 +97,7 @@ async def undo_last_message(data: dict):
 
 
 @app.post("/get_bot_response")
-async def get_game(data: dict):
+async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
 
     game_id = data["gameData"].replace(":", "")
@@ -117,21 +118,21 @@ async def get_game(data: dict):
 
 
 @app.post("/get_user_entry")
-async def get_user_entry(data: dict):
+async def get_user_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     entries = get_single_user_entry(data["collection_name"], data["username"], data["_id"])
     return {"message": entries}
 
 
 @app.post("/update_user_entry")
-async def update_user_entry(data: dict):
+async def update_user_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     entries = update_single_user_entry(data["collection_name"], data["username"], data["_id"], data["updated_entry"])
     return {"message": entries}
 
 
 @app.post("/get_entries")
-async def get_entries(data: dict):
+async def get_entries(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     entries = get_user_entries(data["collection_name"], data["username"])
     return {"message": entries}
@@ -205,7 +206,7 @@ async def unload_model():
 
 # chat gpt routes
 @app.post("/get_chat_gpt_response")
-async def get_chat_gpt_response(data: dict):
+async def get_chat_gpt_response(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     response = getChatGPTResponse(data["PromptList"])
     return {"message": response}

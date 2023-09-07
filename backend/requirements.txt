@@ -8,3 +8,4 @@ uvicorn
 pydantic
 pillow
 bcrypt
+PyJWT

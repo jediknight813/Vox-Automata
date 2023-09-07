@@ -16,5 +16,5 @@ def getChatGPTResponse(PromptList):
     result = ''
     for choice in response.choices:
         result += choice.message.content    
-    
+
     return result
