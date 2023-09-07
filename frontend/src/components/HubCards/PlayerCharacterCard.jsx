@@ -12,7 +12,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
     useEffect(() => {
         const playerCharacterEntrys = async () => {
             var response = await GetEntries("PlayerCharacters", username)
-            response = response.sort((a, b) => b.last_modified - a.last_modified);
+            response = response.sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setPlayerCharacters(response)
         }
         playerCharacterEntrys()
@@ -47,7 +47,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
         }  
 
         return (
-            <div className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10">
+            <div className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10 animate-fadeIn">
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}

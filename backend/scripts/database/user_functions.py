@@ -57,10 +57,10 @@ def get_single_user_entry(collection_name, username, _id):
     cursor = collection.find(query)
 
     # sets the time it was last modified
-    current_timestamp = int(time.time() * 1000)
-    timestamp_str = str(current_timestamp)
+    # current_timestamp = int(time.time() * 1000)
+    # timestamp_str = str(current_timestamp)
     
-    add_value_document(collection_name, _id, "last_modified", timestamp_str)
+    # add_value_document(collection_name, _id, "last_modified", timestamp_str)
 
     for entry in cursor:
         entry["_id"] = str(entry["_id"])

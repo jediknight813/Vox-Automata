@@ -79,7 +79,7 @@ function App() {
 
 
           {/* create and edit routes for games */}
-          <Route path="/CreateGame" element={<Form FormKeys={Game_Form_Keys} Type="Create" name="Create Senario" fieldName="Games" />} />
+          <Route path="/CreateGame" element={<Form FormKeys={Game_Form_Keys} Type="Create" name="Create Game" fieldName="Games" />} />
           <Route path="/CurrentGame/:GameId" element={<GamePage  />} />
 
 

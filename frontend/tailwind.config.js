@@ -16,6 +16,19 @@ export default {
         'website-secondary': 'rgb(55 65 81)',
         'website-accent': 'rgb(91 33 182)'
       },
+
+      animation: {
+        fadeIn: 'fadeIn 0.9s ease-in-out',
+      },
+
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
+  
+
     },
   },
   plugins: [require("daisyui"), require('tailwind-scrollbar')({ nocompatible: true })],

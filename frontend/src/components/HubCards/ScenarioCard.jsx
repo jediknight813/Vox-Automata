@@ -4,15 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { GetImage } from '../../api/UserRoutes'
 
 
-const ScenarioCard = ( { type, username, setSelected=undefined, selectedId="", fieldName="" } ) => {
+const ScenarioCard = ( { type, username } ) => {
     const [Scenario, setScenario] = useState([])
     const navigate = useNavigate()
-
+    
 
     useEffect(() => {
         const ScenarioCharacterEntrys = async () => {
             var response = await GetEntries("Scenarios", username)
-            response = response.sort((a, b) => b.last_modified - a.last_modified);
+            console.log(response)
+            response = response.sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setScenario(response)
         }
         ScenarioCharacterEntrys()
@@ -48,7 +49,7 @@ const ScenarioCard = ( { type, username, setSelected=undefined, selectedId="", f
         }  
 
         return (
-            <div key={key} className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10">
+            <div key={key} className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10 animate-fadeIn">
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}

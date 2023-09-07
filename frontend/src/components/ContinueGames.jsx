@@ -13,7 +13,7 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
     useEffect(() => {
         const GameCharacterEntrys = async () => {
             var response = await GetEntries("Games", username)
-            response = response.sort((a, b) => b.last_modified - a.last_modified);
+            response = response.sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setGame(response)
         }
         GameCharacterEntrys()
@@ -65,7 +65,7 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
         }  
 
         return (
-            <div key={key} className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10">
+            <div key={key} className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10 animate-fadeIns">
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}
