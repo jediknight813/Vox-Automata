@@ -24,16 +24,11 @@ const LoginAndSignUp = ( { type } ) => {
             return
         }
         
-        const params = {
-            "username": username,
-            "password": password
-        }
-
 
         if (type == "Login") {
-            const response = await Login(params)
-            // console.log(response)
-            if (response !== "user not found") {
+            const response = await Login(username, password)
+            console.log(response)
+            if (response["message"] === "login successful") {
                 Cookies.remove('username')
                 Cookies.set('username', response["username"])
                 window.location.reload()
@@ -41,9 +36,9 @@ const LoginAndSignUp = ( { type } ) => {
         }
 
         if (type == "SignUp") {
-            const response = await CreateUser(params)
-            // console.log(response)
-            if (response !== "user exists") {
+            const response = await CreateUser(username, password)
+            console.log(response)
+            if (response["message"] === "user created successfully") {
                 Cookies.remove('username')
                 Cookies.set('username', response["username"])
                 window.location.reload()

@@ -3,19 +3,19 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_BACKEND_API_ADDRESS;
 
 
-export const Login = async (params) => {
-    const response = await axios.get(apiUrl+'/Login', {
-        params: params
+export const Login = async (username, password) => {
+    const response = await axios.post(apiUrl+'/Login', {
+        params: {"password": password, "username": username}
     });
-    return response.data["message"]
+    return response.data
 }
 
 
-export const CreateUser = async (params) => {
-    const response = await axios.get(apiUrl+'/SignUp', {
-        params: params
+export const CreateUser = async (username, password) => {
+    const response = await axios.post(apiUrl+'/SignUp', {
+        params: {"password": password, "username": username}
     });
-    return response.data["message"]
+    return response.data
 }
 
 

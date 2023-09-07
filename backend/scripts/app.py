@@ -21,8 +21,9 @@ app = FastAPI()
 
 origins = [
     # FRONTEND_URL,
-    # "http://localhost:5173",
+    "http://localhost:5173",
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,14 +34,18 @@ app.add_middleware(
 )
 
 
-@app.get("/Login")
-async def Login(username: str, password: str):
-    return login_user(username, password)
+@app.post("/Login")
+async def Login(data: dict):
+    data = data["params"]
+    print(data)
+    return login_user(data["username"], data["password"])
 
 
-@app.get("/SignUp")
-async def SignUp(username: str, password: str):
-    return create_user(username, password)
+@app.post("/SignUp")
+async def SignUp(data: dict):
+    data = data["params"]
+    print(data)
+    return create_user(data["username"], data["password"])
 
 
 @app.post("/create_entry")

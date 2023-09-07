@@ -2,6 +2,7 @@ import pymongo
 import os
 from dotenv import load_dotenv
 import json
+import bcrypt
 load_dotenv()
 mongodb_url = os.environ.get("MONGO_URL")
 database = "VOX_AUTOMATA"
@@ -10,31 +11,26 @@ client = pymongo.MongoClient(mongodb_url, 27017)
 db = client[database]
 
 
-def login_user(username, password):
-    collection = db["user"]
-    user = collection.find_one({"username": username, "password": password})
- 
-    if user:
-        user["_id"] = str(user["_id"])
-        return {"message": user}
-    else:
-        return {"message": "user not found"}
-
-
 def create_user(username, password):
-    # check if user exists.
-    user_check = login_user(username, password)
-    if user_check["message"] != "user not found":
-        return {"message": "user exists"}
-
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     collection = db["user"]
     user = collection.insert_one(
         {
             "username": username, 
-            "password": password
+            "password": hashed_password.decode('utf-8')
         }
     )
 
     return login_user(username, password)
+
+
+def login_user(username, password):
+    collection = db["user"]
+    user = collection.find_one({"username": username})
+
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
+        return {"message": "login successful", "username": username}
+    else:
+        return {"message": "user not found or invalid credentials"}
 

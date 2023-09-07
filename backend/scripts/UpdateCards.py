@@ -84,12 +84,14 @@ db = client[database]
 
 # 64eff3f2be94d94f49fac3b8
 
-collection = db["Scenarios"]
+import bcrypt
+
+collection = db["user"]
 all_documents = collection.find()
 
 for character in all_documents:
-    character = handle_image_generation("Scenarios", character, "new")
-    add_value_document("Scenarios", character["_id"], "image_base64_id", character["image_base64_id"])
+    hashed_password = bcrypt.hashpw(character["password"].encode('utf-8'), bcrypt.gensalt())
+    add_value_document("user", character["_id"], "password", hashed_password)
 
 
 # Games
