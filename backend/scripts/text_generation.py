@@ -2,16 +2,20 @@ import os
 from dotenv import load_dotenv
 import json
 load_dotenv()
-from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation, LocalCharacterGeneration
+from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation, LocalCharacterGeneration, LocalSenarioGeneration
 
+
+
+def configure_vars():
+    TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
+    os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
+    os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
 
 
 def generate_scenario_location(scenario):
     import guidance
-    TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
-    os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
-    os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
-    os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
+    configure_vars()
     guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
 
     ai_response = ScenarioLocation(
@@ -22,12 +26,25 @@ def generate_scenario_location(scenario):
     return bot_response
 
 
+def local_generate_scenario(character_one_name, character_two_name, character_one_description, character_two_description, scenario_prompt):
+    import guidance
+    configure_vars()
+    guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
+
+    response = LocalSenarioGeneration(
+        character_one_name=character_one_name,
+        character_two_name=character_two_name,
+        character_one_description=character_one_description,
+        character_two_description=character_two_description,
+        scenario_prompt=scenario_prompt
+    ) 
+
+    return response.variables()
+
+
 def generate_character_local(character_prompt):
     import guidance
-    TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
-    os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
-    os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
-    os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
+    configure_vars()    
     guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
 
     ai_response = LocalCharacterGeneration(
@@ -40,11 +57,7 @@ def generate_character_local(character_prompt):
 def generate_response(gameData, userMessage, promptFormat="Alpaca"):
     print(promptFormat)
     import guidance
-    TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
-    MODIFIER = os.environ.get("MODIFIER")
-    os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
-    os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
-    os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
+    configure_vars()
     guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
 
     

@@ -2,10 +2,10 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from database.auth_functions import login_user, create_user
 from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry
-from database.game_functions import get_user_game, update_game_messages
+from database.game_functions import get_user_game, update_game_messages, check_for_streaming_message
 from database.image_functions import find_image_base64
-from text_generation import generate_response, generate_character_local
-from chat_gpt import getChatGPTResponse, gpt_generate_character
+from text_generation import generate_response, generate_character_local, local_generate_scenario
+from chat_gpt import getChatGPTResponse, gpt_generate_character, gpt_generate_scenario
 from dotenv import load_dotenv
 from jwt_token_creator import get_current_user
 import os
@@ -107,7 +107,7 @@ async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     if data["username"] != gameData["username"]:
         return
     
-    npc_response = generate_response(gameData, data["userMessage"], data["PromptFormat"])
+    npc_response = await generate_response(gameData, data["userMessage"], data["PromptFormat"])
     current_timestamp = int(time.time() * 1000)
     timestamp_str = str(current_timestamp)
 
@@ -220,10 +220,10 @@ async def generate_character(data: dict, current_user: str = Depends(get_current
 
     if (data["generate_local"]) == "false":
         response = gpt_generate_character(data["character_prompt"])
-        character["name"] = response["character_name"].strip()
-        character["personality"] = response["character_personality"].strip()
-        character["appearance"] = response["character_appearance"].strip()
-        character["wearing"] = response["character_clothing"].strip()
+        character["name"] = response["character_name"]
+        character["personality"] = response["character_personality"]+"\n"+response["character_persona"]
+        character["appearance"] = response["character_appearance"]
+        character["wearing"] = response["character_clothing"]
     else:
         response = generate_character_local(data["character_prompt"])
         character["name"] = response["character_first_name"].strip()+" "+response["character_last_name"].strip()
@@ -232,6 +232,34 @@ async def generate_character(data: dict, current_user: str = Depends(get_current
         character["wearing"] = response["character_clothing"].strip()
 
     return {"message": character}
+
+
+@app.post("/generate_scenario")
+async def generate_scenario(data: dict, current_user: str = Depends(get_current_user)):
+    data = data["params"]
+    scenario = ""
+
+    if (data["generate_local"]) == "false":
+        response = gpt_generate_scenario(data["character_one_name"], data["character_two_name"], data["character_one_description"], data["character_two_description"], data["scenario_prompt"])
+        scenario += response["backstory"]+"\n"
+        scenario += response["plot"]+"\n"
+        scenario += response["situation"]+"\n"
+    else:
+        response = local_generate_scenario(data["character_one_name"], data["character_two_name"], data["character_one_description"], data["character_two_description"], data["scenario_prompt"])
+        scenario += response["backstory"]+"\n"
+        scenario += response["plot"]+"\n"
+        scenario += response["situation"]+"\n"
+
+    return {"message": scenario}
+
+
+# text live streaming routes.
+@app.post("/get_streaming_message")
+async def get_streaming_message(data: dict, current_user: str = Depends(get_current_user)):
+    data = data["params"]
+    current_message = check_for_streaming_message(data["game_id"], current_user)
+
+    return {"message": current_message}
 
 
 if __name__ == "__main__":

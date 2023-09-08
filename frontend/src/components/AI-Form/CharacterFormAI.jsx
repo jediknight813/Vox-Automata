@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react'
+import React, {useState, useEffect, useRef } from 'react'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { GetUserEntry } from '../../api/FormRoutes'
@@ -75,6 +75,32 @@ const CharacterFormAI = () => {
     })
 
 
+    const InputField = ( {name, fieldValue, setFieldValue, placeholder} ) => {
+        const textareaRef = useRef(null);
+
+
+        useEffect(() => {
+            if (textareaRef.current) {
+              textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+            }
+          }, [fieldValue]);
+        
+
+        return (
+            <div className='flex flex-col w-[95%] items-start gap-4'>
+                <h1 className=' capitalize'>{name}</h1>
+                <textarea
+                    ref={textareaRef}
+                    value={fieldValue}
+                    placeholder={placeholder}
+                    className="resize-none p-4 input w-full scrollbar-none"
+                    onChange={(e) => setFieldValue(e.target.value)}
+                />
+            </div>
+        )
+    }
+
+
     return (
         <div className=' w-full min-h-screen h-auto flex flex-col items-center'>
                 
@@ -92,11 +118,11 @@ const CharacterFormAI = () => {
 
                     {/* scenario prompt field. */}
                     <div className=' md:w-[95%] w-full flex gap-2 items-start flex-col'>
-                        <h1>character prompt</h1>
+                        <h1 className=' capitalize'>character prompt</h1>
                         <input value={characterPrompt} onChange={(e) => setCharacterPrompt(e.target.value)} type='text' placeholder='enter scenario prompt.' className=' input w-full'/>
                     </div>
 
-                    {/* character age field. */}
+                    {/* use local text generation field. */}
                     <div className=' md:w-[95%] w-full flex gap-2  items-start flex-col'>
                         <h1>Local Text Generation</h1>
                         <select value={isTextGenerationLocal} className='input w-full' onChange={(e) => setIsTextGenerationLocal(e.target.value)}>
@@ -123,23 +149,13 @@ const CharacterFormAI = () => {
                     </div>
 
                     {/* character personality field. */}
-                    <div className=' md:w-[95%] w-full flex gap-2  items-start flex-col'>
-                        <h1>Personality</h1>
-                        <textarea value={characterPersonalityValue} onChange={(e) => setPersonalityValue(e.target.value)} type='text' placeholder='character personality.' className=' input w-full p-3 h-fit'/>
-                    </div>
+                    <InputField name={"Personality"} fieldValue={characterPersonalityValue} setFieldValue={setPersonalityValue} placeholder='character personality.' />
 
                     {/* character appearance field. */}
-                    <div className=' md:w-[95%] w-full flex gap-2  items-start flex-col'>
-                        <h1>Appearance</h1>
-                        <textarea value={appearanceValue} onChange={(e) => setAppearanceValue(e.target.value)} type='text' placeholder='character appearance.' className=' input w-full p-3 h-fit'/>
-                    </div>
+                    <InputField name={"Appearance"} fieldValue={appearanceValue} setFieldValue={setAppearanceValue} placeholder='character appearance.' />
 
                     {/* character clothing field. */}
-                    <div className=' md:w-[95%] w-full flex gap-2  items-start flex-col'>
-                        <h1>Wearing</h1>
-                        <textarea value={wearingValue} onChange={(e) => setWearingValue(e.target.value)} type='text' placeholder='character is wearing.' className=' input w-full p-3 h-fit'/>
-                    </div>
-
+                    <InputField name={"Wearing"} fieldValue={wearingValue} setFieldValue={setWearingValue} placeholder='character is wearing.' />
                     
                     {/* character age field. */}
                     <div className=' md:w-[95%] w-full flex gap-2  items-start flex-col'>

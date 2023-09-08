@@ -91,6 +91,7 @@ def handle_image_generation(collection_name, data, type):
     if collection_name == "Scenarios":
         # generate background description.
         response = generate_scenario_location(data["scenario"])
+        
 
         use_local_image_generation = check_url(url=f'{A1111_URL}/info')
         print("is using local image gen: ", use_local_image_generation)

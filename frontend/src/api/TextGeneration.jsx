@@ -19,3 +19,13 @@ export const GetGenerateCharacterResponse = async (generate_local, character_pro
     }, {headers} );
     return response.data["message"]
 }
+
+
+export const GetGenerateScenarioResponse = async (generate_local, character_one_name, character_two_name, character_one_description, character_two_description, scenario_prompt) => {
+    const headers = GetJwtHeader()
+    const response = await axios.post(apiUrl+"/generate_scenario", {
+        params: {"generate_local": generate_local, "character_one_name": character_one_name, "character_two_name": character_two_name, "character_one_description": character_one_description, "character_two_description": character_two_description, "scenario_prompt": scenario_prompt}
+    }, {headers} );
+    return response.data["message"]
+}
+

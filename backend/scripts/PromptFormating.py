@@ -19,7 +19,7 @@ AlpacaFormat = guidance('''
     {{player_name}}: {{question}}
 
     ### Response:
-    {{npc_name}}: {{~gen 'response' temperature=0.8 stop='\n' }}
+    {{npc_name}}: {{gen "answer" }}
 ''')
 
 
@@ -34,7 +34,7 @@ Pygmalion2Format = guidance('''
     {{history}}
     <|user|> {{player_name}}: {{question}}
 
-    <|model|> {{npc_name}}: {{~gen 'response' temperature=0.8 stop='\n' }}
+    <|model|> {{npc_name}}: {{gen "response" temperature=0.8 stop='\n' }}
 ''')
 
 
@@ -65,13 +65,21 @@ Only respond with the first and last name.
 
 {{#user~}}
 What would the personality of this character be?
-Only respond with the personality, this should be detailed.
+Only respond with the personality, this should be very detailed.
 {{~/user}}
 
 {{#assistant~}}
 {{gen 'character_personality' max_tokens=100}}
 {{~/assistant}}
-                                        
+
+{{#user~}}
+What would the persona of this character be?
+Only respond with the persona.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'character_persona' max_tokens=100}}
+{{~/assistant}}                         
 
 {{#user~}}
 What would the appearance of this character be?
@@ -85,14 +93,55 @@ Only respond with the appearance.
 
 {{#user~}}
 What would this character be wearing?
-Only respond with the clothing.
+Only respond with the clothing, keep it short.
 {{~/user}}
 
 {{#assistant~}}
 {{gen 'character_clothing' max_tokens=100}}
 {{~/assistant}}                            
 ''')
+                                        
 
+GptScenarioGenerationPrompt = guidance('''
+{{#system~}}
+You are a scenario generator, given two characters and a scenario idea, do not respond with anything or explain yourself, keep it short and to the point.
+{{~/system}}
+
+{{#user~}}
+Character One: {{character_one_name}}
+{{character_one_description}}.
+                                       
+Character Two: {{character_two_name}}
+{{character_two_description}}.                           
+
+Scenario Idea: {{scenario_prompt}}
+
+What would the plot between these two characters be based on the scenario idea? 
+Only respond with a simple plot, don't include backstory, keep it short.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'plot'}}
+{{~/assistant}}
+
+{{#user~}}
+What should the backstory between these two characters be?
+Only respond with the backstory, keep it short.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'backstory'}}
+{{~/assistant}}
+
+{{#user~}}
+What should the intro situation be to this scenario.
+Only respond with the intro situation, keep it short.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'situation'}}
+{{~/assistant}}
+''')
 
 
 LocalCharacterGeneration = guidance('''
@@ -109,7 +158,37 @@ Character Characteristics: {{~gen 'character_appearance' temperature=0.8 stop='\
 Currently Wearing: {{~gen 'character_clothing' temperature=0.8 stop='\n' }}  
 ''')
 
-# <|system|>Enter RP mode. Pretend to be {{char}} whose persona follows:
-# {{persona}}
 
-# You shall reply to the user while staying in character, and generate long responses.
+LocalSenarioGeneration = guidance('''
+### Instruction:
+You are a scenario generator, given two characters and a scenario idea, do not respond with anything or explain yourself.
+                                    
+USER: 
+Character One: {{character_one_name}}
+{{character_one_description}}.
+                                       
+Character Two: {{character_two_name}}
+{{character_two_description}}.           
+
+Scenario Idea: {{scenario_prompt}}
+
+What would the plot between these two characters be based on the scenario idea? 
+Only respond with a simple plot, don't include backstory, keep it short.
+                                  
+### Response:                           
+plot: {{~gen 'plot' temperature=0.8 stop='\n' }}
+
+USER:
+What should the backstory between these two characters be?
+Only respond with the backstory, keep it short.
+                                  
+### Response:
+backstory: {{~gen 'backstory' temperature=0.8 stop='\n' }}
+
+USER:
+What should the intro situation be to this scenario.
+Only respond with the intro situation, keep it short.
+
+### Response:  
+intro situation: {{~gen 'situation' temperature=0.8 stop='\n' }}
+''')

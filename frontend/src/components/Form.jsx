@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import React, { useReducer, useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import { useParams } from 'react-router-dom';
@@ -32,7 +32,7 @@ const useDebounce = (callback) => {
         ref.current?.();
       };
   
-      return debounce(func, 1000);
+      return debounce(func, 3000);
     }, []);
   
     return debouncedCallback;
@@ -95,12 +95,12 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
     // debouncer for text input field.
     const InputField = ( {element, index, default_value, field_name, UpdateFormValue} ) => {
         const [value, setValue] = useState(default_value)
-        
+        const textareaRef = useRef(null);
 
         const debouncedRequest = useDebounce(() => {
             UpdateFormValue(field_name, value)
         });
-        
+
 
         const onChange = (e) => {
             const value = e.target.value;
@@ -108,11 +108,23 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
             debouncedRequest();
         };
 
+        useEffect(() => {
+            if (textareaRef.current) {
+              textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+            }
+          }, [value]);
+        
 
         return (
-            <div key={index} className='flex md:flex-row flex-col w-[90%] md:w-[60%] items-start gap-4 md:items-center'>
-                <h1>{element["name"]}:</h1>
-                <input type={element["type"]} value={value} id={field_name} className=' input input-sm' onChange={(e) => onChange(e)}/>
+            <div key={index} className='flex flex-col w-[95%] items-start gap-4'>
+                <h1 className=' capitalize'>{element["name"]}</h1>
+                <textarea
+                    ref={textareaRef}
+                    value={value}
+                    id={field_name}
+                    className="resize-none p-4 input w-full scrollbar-none"
+                    onChange={(e) => onChange(e)}
+                />
             </div>
         )
     }
@@ -135,9 +147,9 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
     
     
             return (
-                <div key={index} className='flex md:flex-row flex-col w-[90%] md:w-[60%] items-start gap-4 md:items-center'>
-                <h1>{element["name"]}:</h1>
-                <select id={field_name} value={value} className='input input-sm' onChange={(e) => onChange(e)}>
+                <div key={index} className='flex flex-col w-[95%] items-start gap-4'>
+                <h1 className='capitalize'>{element["name"]}:</h1>
+                <select id={field_name} value={value} className='input w-full' onChange={(e) => onChange(e)}>
                     <option value="">Select an option</option>
                     {element["array_values"].map((value, subIndex) => (
                         <option key={value} value={value}>
@@ -205,7 +217,7 @@ const Form = ( {FormKeys, Type, name, fieldName} ) => {
                         </div>
                     )}
 
-                    <h1 className=' text-xl'>{name}</h1>
+                    <h1 className=' text-xl capitalize'>{name}</h1>
                     {FormLayout.map((element, index) => (
                         <>
                             {/* for text input */}

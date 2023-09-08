@@ -58,7 +58,7 @@ const NavBar = () => {
         <dialog id="my_modal_1" className="modal modal-bottom sm:modal-middle">
 
         <form method="dialog" className="modal-box bg-website-background">
-            <h3 className="font-bold text-lg">Setting Menu</h3>
+            <h3 className="font-bold text-lg">Settings Menu</h3>
 
             <div className=' mt-2 flex flex-col gap-4'>
                 <h1>Model Selection</h1>
@@ -71,8 +71,8 @@ const NavBar = () => {
                     ))}
                 </select>
                 <div className=' flex gap-3 items-center'>
-                    <button onClick={() => UnloadModels()} className=' btn'>Unload Model</button>
-                    <button onClick={() => LoadModel(selectedModel)} className=' btn'>Load Model</button>
+                    <button onClick={() => UnloadModels()} className=' btn bg-red-800 text-white hover:bg-red-800'>Unload Model</button>
+                    <button onClick={() => LoadModel(selectedModel)} className=' btn text-white bg-website-accent hover:bg-website-accent'>Load Model</button>
                 </div>
             </div>
 
@@ -95,12 +95,12 @@ const NavBar = () => {
                 <input className=' input' placeholder="Author Repository" onChange={(e) => setModelFormData({ ...modelFormData, author_repo: e.target.value })} />
                 <input className=' input' placeholder="Author Model" onChange={(e) => setModelFormData({ ...modelFormData, author_model: e.target.value })}/>
                 
-                <button onClick={() => DownloadModel(modelFormData)} className='btn outline-none border-none '>Start Download</button>
+                <button onClick={() => DownloadModel(modelFormData)} className='btn outline-none border-none text-white bg-website-accent hover:bg-website-accent'>Start Download</button>
             </div>
 
 
-            <div className="modal-action">
-                <button className="btn outline-none border-none ">Close</button>
+            <div className="modal-action flex-none w-full items-center justify-center">
+                <button className="btn outline-none border-none pr-10 pl-10 text-white bg-website-accent hover:bg-website-accent">Close</button>
             </div>
 
         </form>

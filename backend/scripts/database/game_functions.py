@@ -13,6 +13,21 @@ from .user_functions import add_value_document, get_single_user_entry
 import time
 
 
+def check_for_streaming_message(game_id, username):
+    current_game = get_single_user_entry("Games", username, game_id)
+    
+    if "streaming_message" in current_game:
+        return current_game["streaming_message"]
+    else:
+        add_value_document("Games", game_id, "streaming_message", "")
+        return ""
+
+
+def update_streaming_message(game_id, message):
+    print(message)
+    add_value_document("Games", game_id, "streaming_message", message)
+
+
 def get_user_game(collection_name, username, _id):
     collection = db[collection_name]
 

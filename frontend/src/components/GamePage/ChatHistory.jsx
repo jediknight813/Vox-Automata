@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react'
 
 
-const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image, scrollRef } ) => {
+const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image, scrollRef, isMessageStreaming, streamingMessage } ) => {
 
+    const numFrames = 60;
     useEffect(() => {
         if (scrollRef.current) {
           const element = scrollRef.current;
-    
-          // Calculate the distance to scroll
           const distanceToScroll = element.scrollHeight - element.scrollTop;
-    
-          // Calculate the number of frames for the animation
-          const numFrames = 60; // You can adjust this number for the desired smoothness
           const scrollInterval = distanceToScroll / numFrames;
-    
-          // Scroll smoothly
           let frame = 0;
           const scrollSmoothly = () => {
             if (frame < numFrames) {
@@ -28,32 +22,20 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
           scrollSmoothly();
         }
       }, [scrollRef, chat_messages]);
-
       
+
     function formatTimestamp(timestampStr) {
-        const currentTimestamp = parseFloat(timestampStr); // Convert the input string to a number
+        const currentTimestamp = parseFloat(timestampStr);
         if (isNaN(currentTimestamp)) {
           return '';
         }
-      
         const currentDate = new Date(currentTimestamp);
-      
-        // Get hours and minutes
         const hours = currentDate.getHours();
         const minutes = currentDate.getMinutes();
-      
-        // Determine if it's AM or PM
         const ampm = hours >= 12 ? 'PM' : 'AM';
-      
-        // Convert to 12-hour format
-        const formattedHours = hours % 12 || 12; // Handle midnight (0) as 12
-      
-        // Add leading zeros to minutes if needed
+        const formattedHours = hours % 12 || 12;
         const formattedMinutes = String(minutes).padStart(2, '0');
-      
-        // Create the formatted time string
         const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
-      
         return formattedTime;
     }
 
@@ -95,7 +77,7 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
                 </div>
 
                 <div className="chat-bubble bg-website-secondary text-white font-Comfortaa">{message}</div>
-        </div>
+            </div>
         )
     }
 

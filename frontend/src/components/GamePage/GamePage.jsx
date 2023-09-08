@@ -16,11 +16,32 @@ const GamePage = () => {
     const [npcBase64ImageValue, setNpcBase64ImageValue] = useState()
     const scrollRef = useRef(null);
 
+    // live text streaming hooks.
+    const [isMessageStreaming, setIsMessageStreaming] = useState(false)
+    const [streamingMessage, setStreamingMessage] = useState(false)
+    const [isAiResponding, setIsAiResponding] = useState(false)
+
+
+    // check if a message is currently being streamed.
+    useEffect(() => {
+
+        // const getGameData = async () => {
+        //     const response = await GetGame(GameId, username)
+        //     if (response["message"]["username"] !== usernameValue) {
+        //         navigate("/Hub")
+        //     }
+        //     setGameData(response["message"])
+        // }
+        // getGameData()
+
+    }, [isAiResponding])
+    
 
     const SendUserMessage = (userMessageValue) => {
         if (userMessageValue == "") {
             return
         }
+        setIsAiResponding(true)
         const currentTimestamp = new Date().getTime();
         const timestampStr = currentTimestamp.toString();
         setGameData(gameData => ({
@@ -37,6 +58,7 @@ const GamePage = () => {
             ...gameData,
             messages: [...gameData.messages, {"name": gameData["npc"]["name"], "type": "bot", "message": response["response"], timestamp: response["timestamp"]}]
         }));
+        setIsAiResponding(false)
     }
 
 
