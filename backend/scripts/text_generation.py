@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import json
 load_dotenv()
-from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation
+from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation, LocalCharacterGeneration
 
 
 
@@ -20,6 +20,21 @@ def generate_scenario_location(scenario):
 
     bot_response = ai_response.variables()["response"].strip()
     return bot_response
+
+
+def generate_character_local(character_prompt):
+    import guidance
+    TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
+    os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # can be anything
+    os.environ["OPENAI_API_BASE"] = "http://"+TEXT_GENERATION_LOCAL_URL+"/v1"
+    os.environ["OPENAI_API_HOST"] = "http://"+TEXT_GENERATION_LOCAL_URL
+    guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
+
+    ai_response = LocalCharacterGeneration(
+        character_prompt=character_prompt,
+    )
+
+    return ai_response.variables()
 
 
 def generate_response(gameData, userMessage, promptFormat="Alpaca"):

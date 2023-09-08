@@ -9,6 +9,7 @@ import PlayerCharacterCard from "./components/HubCards/PlayerCharacterCard"
 import SenarioCard from "./components/HubCards/ScenarioCard"
 import GamePage from "./components/GamePage/GamePage"
 import ScenarioFormAI from "./components/AI-Form/ScenarioFormAI"
+import CharacterFormAI from "./components/AI-Form/CharacterFormAI"
 
 
 function App() {
@@ -61,7 +62,7 @@ function App() {
           <Route path="/Sign-Up" element={<LoginAndSignUp type="SignUp" />} />
           <Route path="/Hub" element={<Hub />} />
           <Route path="/ScenarioFormAI" element={<ScenarioFormAI />} />
-
+          <Route path="/CharacterFormAI" element={<CharacterFormAI />} />
 
           {/* create and edit routes for player characters */}
           <Route path="/CreatePlayerCharacter" element={<Form FormKeys={Player_Character_Form_Keys} Type="Create" name="Create Player Character" fieldName="PlayerCharacters" />} />

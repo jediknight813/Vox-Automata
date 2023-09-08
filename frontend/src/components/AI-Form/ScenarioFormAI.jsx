@@ -5,7 +5,7 @@ import NpcCharacterCard from '../HubCards/NpcCharacterCard'
 import PlayerCharacterCard from '../HubCards/PlayerCharacterCard'
 import { GetUserEntry } from '../../api/FormRoutes'
 import { FormatPromptForScenario } from './promptFormats/Scenario'
-import { GetChatGptResponse } from '../../api/ChatGpt'
+import { GetChatGptResponse } from '../../api/TextGeneration'
 import { CreateEntry } from '../../api/FormRoutes'
 
 

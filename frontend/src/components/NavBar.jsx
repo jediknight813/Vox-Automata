@@ -135,6 +135,7 @@ const NavBar = () => {
                         <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-website-primary rounded-box w-52">
                             <li onClick={() => navigate("/")}><a className="justify-between">Profile</a></li>
                             <li><a onClick={()=>window.my_modal_1.showModal()}>Settings</a></li>
+                            <li onClick={() => navigate("CharacterFormAI")}><a>Generate Character</a></li>
                             <li onClick={() => navigate("ScenarioFormAI")}><a>Generate Scenario</a></li>
                             <li onClick={() => UserLogOut()}><a>Logout</a></li>
                         </ul>

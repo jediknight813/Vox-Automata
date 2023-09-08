@@ -4,8 +4,8 @@ from database.auth_functions import login_user, create_user
 from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry
 from database.game_functions import get_user_game, update_game_messages
 from database.image_functions import find_image_base64
-from text_generation import generate_response
-from chat_gpt import getChatGPTResponse
+from text_generation import generate_response, generate_character_local
+from chat_gpt import getChatGPTResponse, gpt_generate_character
 from dotenv import load_dotenv
 from jwt_token_creator import get_current_user
 import os
@@ -212,7 +212,30 @@ async def get_chat_gpt_response(data: dict, current_user: str = Depends(get_curr
     return {"message": response}
 
 
+# generate character route
+@app.post("/generate_character")
+async def generate_character(data: dict, current_user: str = Depends(get_current_user)):
+    data = data["params"]
+    character = {}
+
+    if (data["generate_local"]) == "false":
+        response = gpt_generate_character(data["character_prompt"])
+        character["name"] = response["character_name"].strip()
+        character["personality"] = response["character_personality"].strip()
+        character["appearance"] = response["character_appearance"].strip()
+        character["wearing"] = response["character_clothing"].strip()
+    else:
+        response = generate_character_local(data["character_prompt"])
+        character["name"] = response["character_first_name"].strip()+" "+response["character_last_name"].strip()
+        character["personality"] = response["character_personality"].strip()
+        character["appearance"] = response["character_appearance"].strip()
+        character["wearing"] = response["character_clothing"].strip()
+
+    return {"message": character}
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8888)
+
 
 # host=MONGO_URL

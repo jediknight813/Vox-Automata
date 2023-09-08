@@ -106,6 +106,7 @@ def handle_image_generation(collection_name, data, type):
             image_generated = True
 
 
+
     if image_generated == True and type == "new":
         entry_id = insert_image({"image_base64": base64_encoded})
         data["image_base64_id"] = str(entry_id)
@@ -148,7 +149,6 @@ def create_image_dream_studio(width, height, prompt, NegativePrompt=""):
             ],
             "cfg_scale": 7,
             "clip_guidance_preset": "FAST_BLUE",
-            "style_preset": "anime",
             "height": int(height),
             "width": int(width),
             "samples": 1,
@@ -169,7 +169,7 @@ def create_image_dream_studio(width, height, prompt, NegativePrompt=""):
 
     for i, image in enumerate(data["artifacts"]):
         image_number = i + image_count
-        image_path = os.path.join(folder_path, f"{image_number+1}.png")
+        image_path = os.path.join(folder_path, f"{image_number+1}.jpeg")
         with open(image_path, "wb") as f:
             print("saving image.")
             f.write(base64.b64decode(image["base64"]))

@@ -84,15 +84,50 @@ db = client[database]
 
 # 64eff3f2be94d94f49fac3b8
 
-import bcrypt
+import io
+from PIL import Image
+import pyperclip
+import os
 
-collection = db["user"]
+
+collection = db["images"]
 all_documents = collection.find()
 
-for character in all_documents:
-    hashed_password = bcrypt.hashpw(character["password"].encode('utf-8'), bcrypt.gensalt())
-    add_value_document("user", character["_id"], "password", hashed_password)
+# index = 0
+# for image_object in all_documents:
+#     print(image_object.keys())
 
+#     if 'image_base64' in image_object:
+#         base64_string = image_object["image_base64"]
+
+#         image_data = base64.b64decode(base64_string)
+#         image = Image.open(io.BytesIO(image_data))
+
+#         # Step 3: Resize the image to 512x512 pixels
+#         new_size = (512, 512)
+#         resized_image = image.resize(new_size)
+
+#         # Step 4: Apply compression settings (e.g., reduce quality)
+#         # You can adjust the quality parameter as needed.
+#         compressed_image = resized_image.copy()
+#         compressed_image.save("compressed_image.jpg", format="JPEG", quality=50)
+
+#         # Step 4: Convert the compressed image back to a base64 string if needed
+#         with open("compressed_image.jpg", "rb") as compressed_file:
+#             compressed_image_data = compressed_file.read()
+
+#         compressed_base64 = base64.b64encode(compressed_image_data).decode()
+
+#         print("saved: ", str((len(base64_string)-len(compressed_base64))))
+
+#         pyperclip.copy(compressed_base64)
+
+#         # index += 1
+
+#         add_value_document("images", image_object["_id"], "image_base64", compressed_base64)
+
+        # if index == 5:
+        #     break
 
 # Games
 # Scenarios
