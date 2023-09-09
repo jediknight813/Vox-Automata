@@ -13,7 +13,6 @@ const ScenarioCard = ( { type, username, setSelected=undefined, selectedId="", f
     useEffect(() => {
         const ScenarioCharacterEntrys = async () => {
             var response = await GetEntries("Scenarios", username)
-            console.log(response)
             response = response.sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setScenario(response)
         }

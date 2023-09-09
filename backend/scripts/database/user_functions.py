@@ -69,6 +69,31 @@ def get_single_user_entry(collection_name, username, _id):
     return entries
 
 
+def update_user_profile_stat(username, field_name, field_value):
+    collection = db["user"]
+    query = {"username": username}
+    user_profile = collection.find_one(query)
+
+    if field_name in user_profile:
+        updated_value = (int(user_profile[field_name])+int(field_value))
+        add_value_document("user", user_profile["_id"], field_name, updated_value)
+    else:
+        add_value_document("user", user_profile["_id"], field_name, field_value)
+
+
+def get_profile_stats(username):
+    collection = db["user"]
+    query = {"username": username}
+    user_profile = collection.find_one(query)
+
+    stats = {}
+    stats["generated_words"] = user_profile["generated_words"]
+    stats["typed_words"] = user_profile["typed_words"]
+    stats["profile_image_id"] = user_profile["profile_image_id"]
+
+    return stats
+
+
 def add_value_document(collection_name, document_id, field_name, field_value):
     collection = db[collection_name]
 

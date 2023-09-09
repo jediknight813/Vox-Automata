@@ -19,7 +19,7 @@ AlpacaFormat = guidance('''
     {{player_name}}: {{question}}
 
     ### Response:
-    {{npc_name}}: {{gen "answer" }}
+    {{npc_name}}: {{gen "response" temperature=0.8 stop='\n' }}
 ''')
 
 
@@ -65,29 +65,21 @@ Only respond with the first and last name.
 
 {{#user~}}
 What would the personality of this character be?
-Only respond with the personality, this should be very detailed.
+Only respond with the personality, this should be very detailed, keep it clear and concise though.
 {{~/user}}
 
 {{#assistant~}}
-{{gen 'character_personality' max_tokens=100}}
+{{gen 'character_personality' max_tokens=150}}
 {{~/assistant}}
+                     
 
 {{#user~}}
-What would the persona of this character be?
-Only respond with the persona.
+What would the appearance of this character be? don't include clothing in the description. 
+Only respond with the appearance, this should be very detailed, clear and concise though.
 {{~/user}}
 
 {{#assistant~}}
-{{gen 'character_persona' max_tokens=100}}
-{{~/assistant}}                         
-
-{{#user~}}
-What would the appearance of this character be?
-Only respond with the appearance.
-{{~/user}}
-
-{{#assistant~}}
-{{gen 'character_appearance' max_tokens=100}}
+{{gen 'character_appearance' max_tokens=150}}
 {{~/assistant}}
 
 
@@ -117,7 +109,7 @@ Character Two: {{character_two_name}}
 Scenario Idea: {{scenario_prompt}}
 
 What would the plot between these two characters be based on the scenario idea? 
-Only respond with a simple plot, don't include backstory, keep it short.
+Only respond with a simple plot, don't include backstory.
 {{~/user}}
 
 {{#assistant~}}
@@ -126,7 +118,7 @@ Only respond with a simple plot, don't include backstory, keep it short.
 
 {{#user~}}
 What should the backstory between these two characters be?
-Only respond with the backstory, keep it short.
+Only respond with the backstory.
 {{~/user}}
 
 {{#assistant~}}
@@ -135,7 +127,7 @@ Only respond with the backstory, keep it short.
 
 {{#user~}}
 What should the intro situation be to this scenario.
-Only respond with the intro situation, keep it short.
+Only respond with the intro situation.
 {{~/user}}
 
 {{#assistant~}}
@@ -161,8 +153,8 @@ Currently Wearing: {{~gen 'character_clothing' temperature=0.8 stop='\n' }}
 
 LocalSenarioGeneration = guidance('''
 ### Instruction:
-You are a scenario generator, given two characters and a scenario idea, do not respond with anything or explain yourself.
-                                    
+You are a scenario generator, given two characters and a scenario idea, be creative, do not respond with anything or explain yourself.
+
 USER: 
 Character One: {{character_one_name}}
 {{character_one_description}}.
@@ -173,22 +165,21 @@ Character Two: {{character_two_name}}
 Scenario Idea: {{scenario_prompt}}
 
 What would the plot between these two characters be based on the scenario idea? 
-Only respond with a simple plot, don't include backstory, keep it short.
+Only respond with a simple plot, don't include backstory.
                                   
 ### Response:                           
-plot: {{~gen 'plot' temperature=0.8 stop='\n' }}
+Plot: {{~gen 'plot' temperature=0.8 stop='\n' }}
 
 USER:
-What should the backstory between these two characters be?
-Only respond with the backstory, keep it short.
-                                  
+What should the backstory between these two characters be? 
+Only respond with the backstory of these two characters, don't include any plot details.
+                                 
 ### Response:
-backstory: {{~gen 'backstory' temperature=0.8 stop='\n' }}
+Backstory: {{~gen 'backstory' temperature=0.8 stop='\n' }}
 
-USER:
-What should the intro situation be to this scenario.
-Only respond with the intro situation, keep it short.
-
+USER: 
+What should the intro situation be to this scenario. Only respond with the intro situation.
+This should be short and to the point.
 ### Response:  
-intro situation: {{~gen 'situation' temperature=0.8 stop='\n' }}
+Intro Situation: {{~gen 'situation' temperature=0.8 stop='\n' }}
 ''')

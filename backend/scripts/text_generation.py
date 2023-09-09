@@ -5,7 +5,6 @@ load_dotenv()
 from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation, LocalCharacterGeneration, LocalSenarioGeneration
 
 
-
 def configure_vars():
     TEXT_GENERATION_LOCAL_URL = os.environ.get("TEXT_GENERATION_LOCAL_URL")
     os.environ["OPENAI_API_KEY"] = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -55,11 +54,10 @@ def generate_character_local(character_prompt):
 
 
 def generate_response(gameData, userMessage, promptFormat="Alpaca"):
-    print(promptFormat)
     import guidance
     configure_vars()
     guidance.llm = guidance.llms.OpenAI("text-davinci-003", caching=False)
-
+    MODIFIER = os.environ.get("MODIFIER")
     
     if promptFormat == "Alpaca":
         chat_history_string = create_chat_history_string(gameData)

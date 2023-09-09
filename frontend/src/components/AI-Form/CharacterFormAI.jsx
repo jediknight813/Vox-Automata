@@ -1,10 +1,9 @@
 import React, {useState, useEffect, useRef } from 'react'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
-import { GetUserEntry } from '../../api/FormRoutes'
-import { FormatPromptForScenario } from './promptFormats/Scenario'
 import { GetGenerateCharacterResponse } from '../../api/TextGeneration'
 import { CreateEntry } from '../../api/FormRoutes'
+import { useDebounce } from '../utils'
 
 
 const CharacterFormAI = () => {
@@ -51,7 +50,7 @@ const CharacterFormAI = () => {
                 "username": usernameValue,
                 "name": characterNameValue,
                 "personality": characterPersonalityValue,
-                "appearance": characterPersonalityValue,
+                "appearance": appearanceValue,
                 "wearing": wearingValue,
                 "age": ageValue,
                 "gender": genderValue
@@ -77,7 +76,18 @@ const CharacterFormAI = () => {
 
     const InputField = ( {name, fieldValue, setFieldValue, placeholder} ) => {
         const textareaRef = useRef(null);
+        const [value, setValue] = useState(fieldValue)
 
+
+        const debouncedRequest = useDebounce(() => {
+            setFieldValue(value)
+        });
+
+
+        const onChange = (e) => {
+            setValue(e.target.value);
+            debouncedRequest();
+        };
 
         useEffect(() => {
             if (textareaRef.current) {
@@ -91,10 +101,10 @@ const CharacterFormAI = () => {
                 <h1 className=' capitalize'>{name}</h1>
                 <textarea
                     ref={textareaRef}
-                    value={fieldValue}
+                    value={value}
                     placeholder={placeholder}
                     className="resize-none p-4 input w-full scrollbar-none"
-                    onChange={(e) => setFieldValue(e.target.value)}
+                    onChange={(e) => onChange(e)}
                 />
             </div>
         )

@@ -141,7 +141,7 @@ const GamePage = () => {
                 {(gameData != undefined && playerBase64ImageValue != undefined && npcBase64ImageValue !== undefined) &&
                     <>
                         <div className=' w-[95%] h-[80vh] md:max-h-[600px] max-w-[800px] flex flex-col gap-5 mb-5 bg-website-primary'>
-                            <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue} scrollRef={scrollRef}/ >
+                            <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue} scrollRef={scrollRef} isAiResponding={isAiResponding}/>
                             <SendMessage submitUserMessage={SendUserMessage} />
                         </div>
                         

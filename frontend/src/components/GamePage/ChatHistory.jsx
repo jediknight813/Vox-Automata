@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 
-const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image, scrollRef, isMessageStreaming, streamingMessage } ) => {
+const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_image, scrollRef, isAiResponding } ) => {
 
     const numFrames = 60;
     useEffect(() => {
@@ -95,6 +95,23 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
                         )}
                     </React.Fragment>
                 ))}
+
+                {isAiResponding &&
+                    <div className="chat chat-end"> 
+
+                        <div className="chat-image avatar">
+                            <div className="w-10 rounded-full">
+                                <img srcSet={`data:image/jpeg;base64,${npc_image}`} loading="lazy" />
+                            </div>
+                        </div>
+        
+                        <div className="flex gap-2 chat-header font-Comfortaa">
+                            <h1>{npc_data["name"]}</h1>
+                        </div>
+    
+                    <div className="chat-bubble bg-website-secondary text-white font-Comfortaa"><span className="loading loading-dots loading-md"></span></div>
+                </div>
+                }
             </div>
         </>
     )

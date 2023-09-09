@@ -18,7 +18,10 @@ def create_user(username, password):
     user = collection.insert_one(
         {
             "username": username, 
-            "password": hashed_password.decode('utf-8')
+            "password": hashed_password.decode('utf-8'),
+            "generated_words": 0,
+            "typed_words": 0,
+            "profile_image_id": ""
         }
     )
     return login_user(username, password)

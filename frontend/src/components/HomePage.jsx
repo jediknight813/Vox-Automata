@@ -24,8 +24,8 @@ const HomePage = () => {
       </div>
 
       <div className=' mt-5 flex gap-5'>
-        <button onClick={() => navigate("Login")} className=' btn outline-none border-none '>Login</button>
-        <button onClick={() => navigate("Sign-Up")} className=' btn outline-none border-none '>Sign Up</button>
+        <button onClick={() => navigate("Login")} className=' btn outline-none border-none bg-website-accent text-white'>Login</button>
+        <button onClick={() => navigate("Sign-Up")} className=' btn outline-none border-none bg-website-accent text-white'>Sign Up</button>
       </div>
 
     </div>

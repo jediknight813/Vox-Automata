@@ -90,12 +90,13 @@ import pyperclip
 import os
 
 
-collection = db["images"]
+collection = db["user"]
 all_documents = collection.find()
 
 # index = 0
 # for image_object in all_documents:
-#     print(image_object.keys())
+#     add_value_document("user", image_object["_id"], "profile_image_id", "")
+
 
 #     if 'image_base64' in image_object:
 #         base64_string = image_object["image_base64"]

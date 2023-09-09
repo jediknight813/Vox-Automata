@@ -17,7 +17,7 @@ export const LoadModel = async (modal_name) => {
     const response = await axios.post(apiUrl+"/load_model", {
         params: {"modal_name": modal_name}
     });
-    return response.data
+    return response.data["message"]
 }
 
 
@@ -25,4 +25,5 @@ export const DownloadModel = async (modal_data) => {
     const response = await axios.post(apiUrl+"/download_model", {
         params: modal_data
     });
+    return response.data["message"]
 }

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from database.auth_functions import login_user, create_user
-from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry
+from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry, update_user_profile_stat, get_profile_stats
 from database.game_functions import get_user_game, update_game_messages, check_for_streaming_message
 from database.image_functions import find_image_base64
 from text_generation import generate_response, generate_character_local, local_generate_scenario
@@ -61,7 +61,7 @@ async def create_entry(data: dict, current_user: str = Depends(get_current_user)
 @app.post("/remove_entry")
 async def remove_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
-    entries = remove_user_entry(data["collection_name"], data["username"], data["_id"])
+    entries = remove_user_entry(data["collection_name"], current_user, data["_id"])
     return {"message": entries}
 
 
@@ -101,15 +101,21 @@ async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
 
     game_id = data["gameData"].replace(":", "")
-    gameData = get_user_game("Games", data["username"], game_id)
+    gameData = get_user_game("Games", current_user, game_id)
     gameData = gameData["message"]
 
-    if data["username"] != gameData["username"]:
+    if current_user != gameData["username"]:
         return
     
-    npc_response = await generate_response(gameData, data["userMessage"], data["PromptFormat"])
+    npc_response = generate_response(gameData, data["userMessage"], data["PromptFormat"])
     current_timestamp = int(time.time() * 1000)
     timestamp_str = str(current_timestamp)
+
+    # get number of words generated and save it to user stats.
+    update_user_profile_stat(current_user, "generated_words", len(npc_response.split()))
+
+    # get number of words typed by the user and save it to user stats.
+    update_user_profile_stat(current_user, "typed_words", len(data["userMessage"].split()))
 
     update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": data["userMessage"], "timestamp": data["timestamp"]})
     update_game_messages(data["username"], game_id, {"name": gameData["npc"]["name"], "type": "bot", "message": npc_response, "timestamp": timestamp_str})
@@ -120,14 +126,14 @@ async def get_game(data: dict, current_user: str = Depends(get_current_user)):
 @app.post("/get_user_entry")
 async def get_user_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
-    entries = get_single_user_entry(data["collection_name"], data["username"], data["_id"])
+    entries = get_single_user_entry(data["collection_name"], current_user, data["_id"])
     return {"message": entries}
 
 
 @app.post("/update_user_entry")
 async def update_user_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
-    entries = update_single_user_entry(data["collection_name"], data["username"], data["_id"], data["updated_entry"])
+    entries = update_single_user_entry(data["collection_name"], current_user, data["_id"], data["updated_entry"])
     return {"message": entries}
 
 
@@ -209,6 +215,10 @@ async def unload_model():
 async def get_chat_gpt_response(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     response = getChatGPTResponse(data["PromptList"])
+
+    # get number of words generated and save it to user stats.
+    update_user_profile_stat(current_user, "generated_words", len(response.split()))
+
     return {"message": response}
 
 
@@ -221,7 +231,7 @@ async def generate_character(data: dict, current_user: str = Depends(get_current
     if (data["generate_local"]) == "false":
         response = gpt_generate_character(data["character_prompt"])
         character["name"] = response["character_name"]
-        character["personality"] = response["character_personality"]+"\n"+response["character_persona"]
+        character["personality"] = response["character_personality"]
         character["appearance"] = response["character_appearance"]
         character["wearing"] = response["character_clothing"]
     else:
@@ -230,6 +240,13 @@ async def generate_character(data: dict, current_user: str = Depends(get_current
         character["personality"] = response["character_personality"].strip()
         character["appearance"] = response["character_appearance"].strip()
         character["wearing"] = response["character_clothing"].strip()
+
+    # get number of words generated and save it to user stats.
+    update_user_profile_stat(current_user, "generated_words", sum(len(value.split()) for value in character.values() if isinstance(value, str)))
+
+    # get number of words typed by the user and save it to user stats.
+    update_user_profile_stat(current_user, "typed_words", len(data["character_prompt"].split()))
+
 
     return {"message": character}
 
@@ -241,14 +258,20 @@ async def generate_scenario(data: dict, current_user: str = Depends(get_current_
 
     if (data["generate_local"]) == "false":
         response = gpt_generate_scenario(data["character_one_name"], data["character_two_name"], data["character_one_description"], data["character_two_description"], data["scenario_prompt"])
-        scenario += response["backstory"]+"\n"
-        scenario += response["plot"]+"\n"
+        scenario += response["backstory"]+"\n\n"
+        # scenario += response["plot"]+"\n\n"
         scenario += response["situation"]+"\n"
     else:
         response = local_generate_scenario(data["character_one_name"], data["character_two_name"], data["character_one_description"], data["character_two_description"], data["scenario_prompt"])
-        scenario += response["backstory"]+"\n"
-        scenario += response["plot"]+"\n"
+        scenario += response["backstory"]+"\n\n"
+        # scenario += response["plot"]+"\n\n"
         scenario += response["situation"]+"\n"
+
+    # get number of words generated and save it to user stats.
+    update_user_profile_stat(current_user, "generated_words", len(scenario.split()))
+
+    # get number of words typed by the user and save it to user stats.
+    update_user_profile_stat(current_user, "typed_words", len(data["scenario_prompt"].split()))
 
     return {"message": scenario}
 
@@ -262,8 +285,17 @@ async def get_streaming_message(data: dict, current_user: str = Depends(get_curr
     return {"message": current_message}
 
 
+# user profile routes.
+@app.post("/get_user_profile_details")
+async def get_user_profile_details(data: dict):
+    data = data["params"]
+    stats = get_profile_stats(data["username"])
+    return { "message": stats }
+
+
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8888)
 
 
-# host=MONGO_URL

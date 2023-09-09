@@ -7,26 +7,7 @@ import { GetUserEntry } from '../../api/FormRoutes'
 import { FormatPromptForScenario } from './promptFormats/Scenario'
 import { GetGenerateScenarioResponse } from '../../api/TextGeneration'
 import { CreateEntry } from '../../api/FormRoutes'
-import { debounce } from 'lodash'
-
-
-const useDebounce = (callback) => {
-    const ref = useRef();
-  
-    useEffect(() => {
-      ref.current = callback;
-    }, [callback]);
-  
-    const debouncedCallback = useMemo(() => {
-      const func = () => {
-        ref.current?.();
-      };
-  
-      return debounce(func, 3000);
-    }, []);
-  
-    return debouncedCallback;
-};
+import { useDebounce } from '../utils'
 
 
 const ScenarioFormAI = () => {

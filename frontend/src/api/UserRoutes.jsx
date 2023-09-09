@@ -26,3 +26,12 @@ export const GetImage = async (_id) => {
     });
     return response.data["message"]
 }
+
+
+export const GetUserProfileDetails = async (username) => {
+    const response = await axios.post(apiUrl+"/get_user_profile_details", {
+        params: {"username": username}
+    });
+    return response["data"]["message"]
+}
+

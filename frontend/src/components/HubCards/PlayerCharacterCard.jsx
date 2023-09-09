@@ -47,7 +47,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
         }  
 
         return (
-            <div className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10 animate-fadeIn">
+            <div key={key} className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10 animate-fadeIn">
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}
