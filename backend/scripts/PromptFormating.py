@@ -19,7 +19,7 @@ AlpacaFormat = guidance('''
     {{player_name}}: {{question}}
 
     ### Response:
-    {{npc_name}}: {{gen "response" temperature=0.8 stop='\n' }}
+    {{npc_name}}: {{~gen "response" temperature=0.8 stop='\n' }}
 ''')
 
 
@@ -34,7 +34,7 @@ Pygmalion2Format = guidance('''
     {{history}}
     <|user|> {{player_name}}: {{question}}
 
-    <|model|> {{npc_name}}: {{gen "response" temperature=0.8 stop='\n' }}
+    <|model|> {{npc_name}}: {{~gen "response" temperature=0.8 stop='\n' }}
 ''')
 
 

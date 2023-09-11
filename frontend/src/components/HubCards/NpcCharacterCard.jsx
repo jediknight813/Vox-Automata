@@ -9,15 +9,33 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
     const navigate = useNavigate()
 
 
-    useEffect(() => {
-        const NpcCharacterEntrys = async () => {
-            var response = await GetEntries("NpcCharacters", username)
-            response = response.sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
-            setNpcCharacters(response)
-        }
-        NpcCharacterEntrys()
+    const [pageNumber, setPageNumber] = useState(1)
+    const [pageSize, setPageSize] = useState(5)
+    const [moreResults, setMoreResults] = useState(false)
 
-    }, [username])
+
+    const loadMoreGames = async () => {
+        if (moreResults && username != undefined) {
+            const response = await GetEntries("NpcCharacters", username, pageNumber+1, pageSize);
+            const newEntries = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
+            setNpcCharacters((NpcCharacters) => [...NpcCharacters, ...newEntries]);
+            setMoreResults(response["more_results"]);
+            setPageNumber(pageNumber + 1);
+        }
+    };
+
+    useEffect(() => {
+        const loadInitialGames = async () => {
+            const response = await GetEntries("NpcCharacters", username, pageNumber, pageSize);
+            console.log(response)
+            const newEntries = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
+            setNpcCharacters(newEntries);
+            setMoreResults(response["more_results"]);
+        };
+
+        loadInitialGames();
+    }, [username]);
+
 
     const DeleteEntry = async (collectionName, entryId) => {
         if (username != undefined) {
@@ -47,7 +65,7 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
         }
 
         return (
-            <div className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10 animate-fadeIn">
+            <div className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative animate-fadeIn">
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}
@@ -105,7 +123,7 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
             </div>
 
         {/* overflow container */}
-        <div className={`  w-full h-auto flex overflow-x-scroll min-h-[200px] gap-5 scrollbar-thin  ${(type  == "display") ? ' scrollbar-track-website-background scrollbar-thumb-purple-900 ' : ' scrollbar-website-primary scrollbar-thumb-purple-900 '}`}>
+        <div className={`w-full h-auto flex md:justify-start min-h-[200px] gap-5 scrollbar-thin ${(type  == "display") ? ' flex-wrap justify-center' : ' scrollbar-website-primary scrollbar-thumb-purple-900 overflow-x-scroll'}`}>
             {NpcCharacters.length == 0 ?
                 <>
                   <div className=' flex flex-col items-center justify-center w-full gap-4'>
@@ -119,6 +137,12 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
                     <Card element={element} key={index} />
                 ))}
             </>
+            }
+
+            {moreResults &&
+                <div className={` ${(type  == "display") ? ' flex items-center justify-center w-full mt-10 mb-10 flex-none ' : 'flex flex-none w-[300px] h-[400px]  items-center justify-center '}`}>
+                    <button onClick={loadMoreGames} className='cursor-pointer font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent self-center'>Load More</button>
+                </div>
             }
         </div>
 

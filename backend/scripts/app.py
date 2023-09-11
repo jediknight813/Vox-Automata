@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from database.auth_functions import login_user, create_user
 from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry, update_user_profile_stat, get_profile_stats
-from database.game_functions import get_user_game, update_game_messages, check_for_streaming_message
+from database.game_functions import get_user_game, update_game_messages, check_for_streaming_message, get_user_games
 from database.image_functions import find_image_base64
 from text_generation import generate_response, generate_character_local, local_generate_scenario
 from chat_gpt import getChatGPTResponse, gpt_generate_character, gpt_generate_scenario
@@ -38,14 +38,12 @@ app.add_middleware(
 @app.post("/Login")
 async def Login(data: dict):
     data = data["params"]
-    print(data)
     return login_user(data["username"], data["password"])
 
 
 @app.post("/SignUp")
 async def SignUp(data: dict):
     data = data["params"]
-    print(data)
     return create_user(data["username"], data["password"])
 
 
@@ -65,6 +63,7 @@ async def remove_entry(data: dict, current_user: str = Depends(get_current_user)
     return {"message": entries}
 
 
+# game routes
 @app.post("/get_game")
 async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
@@ -97,7 +96,7 @@ async def undo_last_message(data: dict, current_user: str = Depends(get_current_
 
 
 @app.post("/get_bot_response")
-async def get_game(data: dict, current_user: str = Depends(get_current_user)):
+async def get_bot_response(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
 
     game_id = data["gameData"].replace(":", "")
@@ -123,6 +122,17 @@ async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     return {"message": {"response": npc_response, "timestamp": timestamp_str}}
 
 
+@app.post("/get_user_game_entries")
+async def get_user_game_entries(data: dict, current_user: str = Depends(get_current_user)):
+    data = data["params"]
+    user_games, more_pages = get_user_games(current_user, data["page_number"], data["page_size"])
+    games_data = {
+        "games": user_games,
+        "more_results": more_pages
+    }
+    return {"message": games_data}
+
+
 @app.post("/get_user_entry")
 async def get_user_entry(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
@@ -140,13 +150,15 @@ async def update_user_entry(data: dict, current_user: str = Depends(get_current_
 @app.post("/get_entries")
 async def get_entries(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
-    entries = get_user_entries(data["collection_name"], data["username"])
-    return {"message": entries}
+    user_entries, more_pages = get_user_entries(data["collection_name"], data["username"], data["page_number"], data["page_size"])
+    entries_data = {
+        "entries": user_entries,
+        "more_results": more_pages
+    }
+    return {"message": entries_data}
 
 
 # image routes
-
-
 @app.post("/get_image_base64")
 async def get_image_base64(data: dict):
     data = data["params"]
@@ -291,6 +303,8 @@ async def get_user_profile_details(data: dict):
     data = data["params"]
     stats = get_profile_stats(data["username"])
     return { "message": stats }
+
+
 
 
 

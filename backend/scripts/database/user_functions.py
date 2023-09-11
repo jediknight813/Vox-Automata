@@ -33,19 +33,31 @@ def insert_entry(data, collection_name):
         return {"message": "entry was not added"}
 
 
-def get_user_entries(collection_name, username):
+def get_user_entries(collection_name, username, page_number=1, page_size=10):
     entries = []
     collection = db[collection_name]
 
     # Find documents where the 'username' field matches the provided username
     query = {"username": username}
-    cursor = collection.find(query)
+
+    # Count the total number of documents that match the query
+    total_count = collection.count_documents(query)
+
+    # Calculate the skip value and limit for the current page
+    skip = (page_number - 1) * page_size
+    limit = page_size
+
+    # Retrieve documents for the current page
+    cursor = collection.find(query).skip(skip).limit(limit)
 
     for entry in cursor:
         entry["_id"] = str(entry["_id"])
         entries.append(entry)
 
-    return entries
+    # Calculate if there are more pages
+    more_pages = (skip + limit) < total_count
+
+    return entries, more_pages
 
 
 def get_single_user_entry(collection_name, username, _id):

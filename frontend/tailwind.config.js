@@ -14,7 +14,10 @@ export default {
         'website-background': 'rgb(17 24 39)',
         'website-primary': 'rgb(31 41 55)',
         'website-secondary': 'rgb(55 65 81)',
-        'website-accent': 'rgb(91 33 182)'
+        'website-accent': 'rgb(91 33 182)',
+        'button-complementary': 'rgb(214 61 46)', 
+        'button-contrasting': 'rgb(255 255 255)', 
+        'button-subtle': 'rgb(31 41 55)', 
       },
 
       animation: {

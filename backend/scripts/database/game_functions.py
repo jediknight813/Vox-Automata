@@ -69,6 +69,32 @@ def get_user_game(collection_name, username, _id):
     return {"message": data}
 
 
+def get_user_games(username, page_number=1, page_size=10):
+    user_games = []
+
+    collection = db["Games"]
+    query = {"username": username}
+
+    # Count the total number of documents that match the query
+    total_count = collection.count_documents(query)
+
+    # Calculate the skip value and limit for the current page
+    skip = (page_number - 1) * page_size
+    limit = page_size
+
+    # Retrieve documents for the current page
+    cursor = collection.find(query).skip(skip).limit(limit)
+
+    for entry in cursor:
+        entry["_id"] = str(entry["_id"])
+        user_games.append(entry)
+
+    # Calculate if there are more pages
+    more_pages = (skip + limit) < total_count
+
+    return user_games, more_pages
+
+
 def update_game_messages(username, _id, new_value):
     collection = db["Games"]
     query = {"username": username, "_id": ObjectId(_id)}

@@ -107,6 +107,21 @@ def handle_image_generation(collection_name, data, type):
             image_generated = True
 
 
+    if image_generated == True:
+        image_data = base64.b64decode(str(base64_encoded))
+        image = Image.open(io.BytesIO(image_data))
+        new_size = (512, 512)
+        resized_image = image.resize(new_size)
+        compressed_image = resized_image.copy()
+        compressed_image.save("compressed_image.jpg", format="JPEG", quality=90)
+        with open("compressed_image.jpg", "rb") as compressed_file:
+            compressed_image_data = compressed_file.read()
+        os.remove("compressed_image.jpg")
+        
+        compressed_base64 = base64.b64encode(compressed_image_data).decode()
+        print("saved: ", str((len(base64_encoded)-len(compressed_base64))))
+        base64_encoded = compressed_base64
+
 
     if image_generated == True and type == "new":
         entry_id = insert_image({"image_base64": base64_encoded})

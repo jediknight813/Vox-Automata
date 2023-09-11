@@ -12,6 +12,7 @@ const Hub = () => {
     const [usernameValue, setUsername] = useState()
     const navigate = useNavigate()
     const [profileDetails, setProfileDetails] = useState()
+    const [currentTab, setCurrentTab] = useState("Player Characters")
 
 
     useEffect(() => {
@@ -42,18 +43,41 @@ const Hub = () => {
                 {/* this div is for spacing */}
                 <div></div>
 
-                <h1 className=' font-Comfortaa text-3xl'>{usernameValue}</h1>
+                <h1 className=' font-Comfortaa text-2xl md:text-3xl text-center'>{usernameValue}</h1>
                 {(profileDetails != undefined) &&
-                    <div className=' flex gap-4 font-Comfortaa w-full items-center justify-center'>
-                        <h1 className=' p-4 bg-website-accent rounded-lg'>Generated Words {profileDetails["generated_words"]}</h1>
-                        <h1 className=' p-4 bg-website-accent rounded-lg'>Words Typed {profileDetails["typed_words"]}</h1>
-                    </div>
+                    <>
+                        <div className=' flex gap-4 font-Comfortaa w-full items-center justify-center max-w-[400px]'>
+                            <h1 className=' p-3 bg-website-accent rounded-lg text-center w-[48%]'>Words Generated <div>{profileDetails["generated_words"]}</div></h1>
+                            <h1 className=' p-3 bg-website-accent rounded-lg text-center w-[48%]'>Words Typed <div>{profileDetails["typed_words"]}</div></h1>
+                        </div>
+
+                        <div className=' w-full flex gap-4 flex-wrap font-Comfortaa justify-center'>
+                            <button onClick={() => setCurrentTab("Games")} className=' rounded-lg btn-sm bg-purple-800 '>Games</button>
+                            <button onClick={() => setCurrentTab("Scenarios")} className=' rounded-lg btn-sm bg-purple-800'>Senarios</button>
+                            <button onClick={() => setCurrentTab("Player Characters")} className=' rounded-lg btn-sm bg-purple-800 '>Player Characters</button>
+                            <button onClick={() => setCurrentTab("Npc Characters")} className=' rounded-lg btn-sm bg-purple-800 '>Npc Characters</button>
+                        </div>
+                    </>
                 }
 
-                <PlayerCharacterCard type="display" username={usernameValue}/>
-                <NpcCharacterCard type="display" username={usernameValue}/>
-                <SenarioCard type="display" username={usernameValue}/>
-                <GameCard type="display" username={usernameValue}/>
+                {(currentTab == "Npc Characters") &&
+                    <NpcCharacterCard type="display" username={usernameValue}/>
+                }
+
+                {(currentTab == "Player Characters") &&
+                    <PlayerCharacterCard type="display" username={usernameValue}/>
+                }
+
+
+                {(currentTab == "Games") &&
+                    <GameCard type="display" username={usernameValue}/>
+                }
+
+
+                {(currentTab == "Scenarios") &&
+                    <SenarioCard type="display" username={usernameValue}/>
+                }
+
             </>
         }
 

@@ -8,15 +8,34 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
     const [playerCharacters, setPlayerCharacters] = useState([])
     const navigate = useNavigate()
 
+    // for pagnation.
+    const [pageNumber, setPageNumber] = useState(1)
+    const [pageSize, setPageSize] = useState(5)
+    const [moreResults, setMoreResults] = useState(false)
+
+
+    const loadMoreGames = async () => {
+        if (moreResults && username != undefined) {
+            const response = await GetEntries("PlayerCharacters", username, (pageNumber+1), pageSize);
+            const newGames = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
+            setPlayerCharacters((playerCharacters) => [...playerCharacters, ...newGames]);
+            setMoreResults(response["more_results"]);
+            setPageNumber(pageNumber + 1);
+        }
+    };
 
     useEffect(() => {
-        const playerCharacterEntrys = async () => {
-            var response = await GetEntries("PlayerCharacters", username)
-            response = response.sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
-            setPlayerCharacters(response)
-        }
-        playerCharacterEntrys()
-    }, [username])
+        const loadInitialGames = async () => {
+            const response = await GetEntries("PlayerCharacters", username, pageNumber, pageSize);
+            console.log(response)
+            const newGames = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
+            setPlayerCharacters(newGames);
+            setMoreResults(response["more_results"]);
+        };
+
+        loadInitialGames();
+    }, [username]);
+
 
     const DeleteEntry = async (collectionName, entryId) => {
         if (username != undefined) {
@@ -96,7 +115,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
 
 
   return (
-    <div className='flex flex-col w-[95%] max-w-[1200px] rounded-lg min-h-[250px]'>
+    <div className='flex flex-col w-full md:w-[95%] max-w-[1200px] rounded-lg min-h-[250px]'>
 
         <div className=' flex flex-col md:flex-row gap-4 items-center'>
             <h1 className=' font-Comfortaa text-3xl font-bold'>Player Characters</h1>
@@ -106,7 +125,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
             </div>
 
         {/* overflow container */}
-        <div className={`  w-full h-auto flex overflow-x-scroll min-h-[200px] gap-5 scrollbar-thin  ${(type  == "display") ? ' scrollbar-track-website-background scrollbar-thumb-purple-900 ' : ' scrollbar-website-primary scrollbar-thumb-purple-900 '}`}>
+        <div className={`w-full h-auto flex md:justify-start min-h-[200px] gap-5 scrollbar-thin ${(type  == "display") ? ' flex-wrap justify-center' : ' scrollbar-website-primary scrollbar-thumb-purple-900 overflow-x-scroll '}`}>
             {playerCharacters.length == 0 ?
                 <>
                     <div className=' flex flex-col items-center justify-center w-full gap-4'>
@@ -120,6 +139,12 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
                     <Card element={element} key={index} />
                 ))}
             </>
+            }
+
+            {moreResults &&
+                <div className={` ${(type  == "display") ? ' flex items-center justify-center w-full mt-10 mb-10 flex-none ' : 'flex flex-none w-[300px] h-[400px]  items-center justify-center '}`}>
+                    <button onClick={loadMoreGames} className='cursor-pointer font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent self-center'>Load More</button>
+                </div>
             }
         </div>
 

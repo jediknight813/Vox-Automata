@@ -10,10 +10,10 @@ export const CreateEntry = async (params) => {
 }
 
 
-export const GetEntries = async (collection_name, username) => {
+export const GetEntries = async (collection_name, username, page_number, page_size) => {
     const headers = GetJwtHeader()
     const response = await axios.post(apiUrl+"/get_entries", {
-        params: {"collection_name": collection_name, "username": username}
+        params: {"collection_name": collection_name, "username": username, "page_number": page_number, "page_size": page_size}
     }, { headers } );
     return response.data["message"]
 }

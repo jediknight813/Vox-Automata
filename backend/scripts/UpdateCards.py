@@ -16,6 +16,9 @@ client = pymongo.MongoClient(mongodb_url, 27017)
 db = client[database]
 
 
+from database.game_functions import get_user_games
+
+
 # def update_single_user_entry(collection_name, username, _id, new_entry):
 #     collection = db[collection_name]
 #     new_entry.pop("_id")
@@ -84,20 +87,17 @@ db = client[database]
 
 # 64eff3f2be94d94f49fac3b8
 
-import io
-from PIL import Image
-import pyperclip
-import os
+# import io
+# from PIL import Image
+# import pyperclip
+# import os
 
 
-collection = db["user"]
-all_documents = collection.find()
+# collection = db["images"]
+# all_documents = collection.find()
 
 # index = 0
 # for image_object in all_documents:
-#     add_value_document("user", image_object["_id"], "profile_image_id", "")
-
-
 #     if 'image_base64' in image_object:
 #         base64_string = image_object["image_base64"]
 
@@ -111,7 +111,7 @@ all_documents = collection.find()
 #         # Step 4: Apply compression settings (e.g., reduce quality)
 #         # You can adjust the quality parameter as needed.
 #         compressed_image = resized_image.copy()
-#         compressed_image.save("compressed_image.jpg", format="JPEG", quality=50)
+#         compressed_image.save("compressed_image.jpg", format="JPEG", quality=90)
 
 #         # Step 4: Convert the compressed image back to a base64 string if needed
 #         with open("compressed_image.jpg", "rb") as compressed_file:

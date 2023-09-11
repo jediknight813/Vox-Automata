@@ -22,6 +22,15 @@ export const GetBotResponse = async (gameData, username, userMessage, timestampS
 }
 
 
+export const GetUserGames = async (page_number, page_size) => {
+    const headers = GetJwtHeader()
+    const response = await axios.post(apiUrl+"/get_user_game_entries", {
+        params: {"page_number": page_number, "page_size": page_size}
+    }, {headers} );
+    return response.data["message"]
+}
+
+
 export const UndoLastMessage = async (gameData, username) => {
     const headers = GetJwtHeader()
     const response = await axios.post(apiUrl+"/undo_last_message", {

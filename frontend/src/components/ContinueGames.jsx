@@ -1,30 +1,48 @@
 import React, {useState, useEffect} from 'react'
-import { GetEntries, RemoveEntry } from '../api/FormRoutes'
+import { RemoveEntry } from '../api/FormRoutes'
+import { GetUserGames } from '../api/GameRoutes'
 import { useNavigate } from 'react-router-dom'
 import { GetUserEntry } from '../api/FormRoutes'
 import { GetImage } from '../api/UserRoutes'
 
 
 const GameCard = ( { type, username, setSelected=undefined, selectedId="", fieldName="" } ) => {
-    const [Game, setGame] = useState([])
+    const [Game, setGames] = useState([])
     const navigate = useNavigate()
 
+    const [pageNumber, setPageNumber] = useState(1)
+    const [pageSize, setPageSize] = useState(5)
+    const [moreResults, setMoreResults] = useState(false)
+
+
+    const loadMoreGames = async () => {
+        if (moreResults) {
+            const response = await GetUserGames(pageNumber+1, pageSize);
+            const newGames = response["games"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
+            setGames((prevGames) => [...prevGames, ...newGames]);
+            setMoreResults(response["more_results"]);
+            setPageNumber(pageNumber + 1);
+        }
+    };
 
     useEffect(() => {
-        const GameCharacterEntrys = async () => {
-            var response = await GetEntries("Games", username)
-            response = response.sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
-            setGame(response)
-        }
-        GameCharacterEntrys()
+        const loadInitialGames = async () => {
+            const response = await GetUserGames(pageNumber, pageSize);
+            console.log(response)
+            const newGames = response["games"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
+            setGames(newGames);
+            setMoreResults(response["more_results"]);
+        };
 
-    }, [username])
+        loadInitialGames();
+    }, [username]);
+
 
     const DeleteEntry = async (collectionName, entryId) => {
         if (username != undefined) {
-            setGame(await RemoveEntry(collectionName, entryId, username))
+            setGames(await RemoveEntry(collectionName, entryId, username))
             const updatedGame = Game.filter(Game => Game["_id"] !== entryId);
-            setGame(updatedGame)
+            setGames(updatedGame)
         }
 
     }
@@ -65,11 +83,10 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
         }  
 
         return (
-            <div key={key} className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative mb-10 animate-fadeIns">
+            <div key={key} className="w-[350px] pt-5 text-white cursor-pointer rounded-xl flex-none relative animate-fadeIn">
                 <figure>
                     <img
                     src={`data:image/jpeg;base64,${base64Image}`}
-                    loading="lazy"
                     className="w-96 rounded-xl rounded-bl-xl rounded-br-xl"
                     alt="Image"
                     />
@@ -111,7 +128,7 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
 
 
   return (
-    <div className='flex flex-col w-[95%] max-w-[1200px] rounded-lg min-h-[250px] mb-20'>
+    <div className='flex flex-col w-screen md:w-[95%] max-w-[1500px] rounded-lg min-h-[250px] mb-20'>
 
         <div className=' flex flex-col md:flex-row gap-4 items-center'>
             <h1 className=' font-Comfortaa text-3xl font-bold'>Games</h1>
@@ -121,7 +138,7 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
             </div>
 
         {/* overflow container */}
-        <div className={`  w-full h-auto flex overflow-x-scroll min-h-[200px] gap-5 scrollbar-thin  ${(type  == "display") ? ' scrollbar-track-website-background scrollbar-thumb-purple-900 ' : ' scrollbar-website-primary scrollbar-thumb-purple-900 '}`}>
+        <div className={`w-full h-auto flex justify-center md:justify-start soverflow-y-scroll flex-wrap min-h-[200px] gap-5 scrollbar-thin  ${(type  == "display") ? ' scrollbar-track-website-background scrollbar-thumb-purple-900' : ' scrollbar-website-primary scrollbar-thumb-purple-900 '}`}>
             {Game.length == 0 ?
                 <>
                     <div className=' flex flex-col items-center justify-center w-full gap-4'>
@@ -137,7 +154,12 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
             </>
             }
         </div>
-
+        
+        {moreResults &&
+            <div className='flex items-center justify-center w-full mt-10 flex-none'>
+                <button onClick={loadMoreGames} className='cursor-pointer self-center font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent'>Load More</button>
+            </div>
+        }
     </div>
   )
 }

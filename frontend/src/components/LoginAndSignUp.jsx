@@ -71,7 +71,7 @@ const LoginAndSignUp = ( { type } ) => {
                 </div>
                 
 
-                <button onClick={() => SubmitLoginInfo()} className=' btn outline-none border-none  bg-purple-700 hover:bg-purple-700 text-white font-Comfortaa cursor-pointer btn outline-none border-none -sm transition duration-100 ease-in-out hover:-translate-y-[2px]'>
+                <button onClick={() => SubmitLoginInfo()} className='btn bg-purple-700 hover:bg-purple-700 text-white font-Comfortaa cursor-pointer outline-none border-none -sm transition duration-100 ease-in-out hover:-translate-y-[2px]'>
                     {type == "Login" ? 
                         <h1 className=''>Login</h1>
                         :
