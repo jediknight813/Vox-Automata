@@ -86,9 +86,24 @@ def get_user_games(username, page_number=1, page_size=10):
     cursor = collection.find(query).skip(skip).limit(limit).sort("date_modified", pymongo.DESCENDING)
 
     for entry in cursor:
-        print(entry)
+        total_words = 0
+
+        if "messages" in entry:
+            entry["number_of_messages"] = len(entry["messages"])
+
+            if len(entry["messages"]) >= 1:
+                for b in entry["messages"]:
+                    total_words += len(b["name"].split(" ")+b["message"].split(" "))
+
+                
+            
+            entry["total_words"] = total_words
+            del entry["messages"]
+
         entry["_id"] = str(entry["_id"])
+        print(entry)
         user_games.append(entry)
+
 
     # Calculate if there are more pages
     more_pages = (skip + limit) < total_count

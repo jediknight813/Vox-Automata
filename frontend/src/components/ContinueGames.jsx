@@ -102,13 +102,13 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
 
                         <div className=' flex gap-4'>
                             <>
-                                {element?.["messages"] !== undefined && (
+                                {element?.["total_words"] !== undefined && (
                                     <>
                                         <div className="text-sm self-center bg-blue-500 mt-2 pr-2 pl-2 rounded-md">
-                                            {element["messages"].reduce((acc, obj) => acc + obj.message.split(' ').filter(Boolean).length, 0)} words
+                                            {element["total_words"]} words
                                         </div>
                                         <div className="text-sm self-center bg-purple-700 mt-2 pr-2 pl-2 rounded-md">
-                                            {element["messages"].length} messages
+                                            {element["number_of_messages"]} messages
                                         </div>
                                     </>
                                 )}
