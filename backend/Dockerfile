@@ -5,8 +5,8 @@ WORKDIR /src
 COPY requirements.txt ./
 RUN pip3 install -r requirements.txt
 
-COPY images ./images/
 COPY scripts ./scripts/
+COPY images ./images/
 COPY .env ./
 
 ENTRYPOINT ["python3", "-u", "./scripts/app.py"]

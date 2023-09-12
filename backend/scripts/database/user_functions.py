@@ -48,7 +48,7 @@ def get_user_entries(collection_name, username, page_number=1, page_size=10):
     limit = page_size
 
     # Retrieve documents for the current page
-    cursor = collection.find(query).skip(skip).limit(limit)
+    cursor = collection.find(query).skip(skip).limit(limit).sort("date_modified", pymongo.DESCENDING)
 
     for entry in cursor:
         entry["_id"] = str(entry["_id"])

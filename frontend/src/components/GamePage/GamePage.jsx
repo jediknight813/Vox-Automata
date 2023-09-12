@@ -5,6 +5,7 @@ import { GetImage } from '../../api/UserRoutes';
 import Cookies from 'js-cookie';
 import ChatHistory from './ChatHistory';
 import SendMessage from './SendMessage';
+import { decryptMessage, encryptMessage } from '../utils';
 
 
 const GamePage = () => {
@@ -21,20 +22,6 @@ const GamePage = () => {
     const [streamingMessage, setStreamingMessage] = useState(false)
     const [isAiResponding, setIsAiResponding] = useState(false)
 
-
-    // check if a message is currently being streamed.
-    useEffect(() => {
-
-        // const getGameData = async () => {
-        //     const response = await GetGame(GameId, username)
-        //     if (response["message"]["username"] !== usernameValue) {
-        //         navigate("/Hub")
-        //     }
-        //     setGameData(response["message"])
-        // }
-        // getGameData()
-
-    }, [isAiResponding])
     
 
     const SendUserMessage = (userMessageValue) => {

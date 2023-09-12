@@ -115,14 +115,14 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
 
 
   return (
-    <div className='flex flex-col w-full md:w-[95%] max-w-[1200px] rounded-lg min-h-[250px]'>
+    <div className='flex flex-col w-full md:w-[95%] max-w-[1500px] rounded-lg min-h-[250px]'>
 
         <div className=' flex flex-col md:flex-row gap-4 items-center'>
             <h1 className=' font-Comfortaa text-3xl font-bold'>Player Characters</h1>
             {(playerCharacters.length >= 1 && type != "edit") &&
                 <button onClick={() => navigate("/CreatePlayerCharacter")} className={`cursor-pointer mb-4 font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent`}>Create Player</button>
             }
-            </div>
+        </div>
 
         {/* overflow container */}
         <div className={`w-full h-auto flex md:justify-start min-h-[200px] gap-5 scrollbar-thin ${(type  == "display") ? ' flex-wrap justify-center' : ' scrollbar-website-primary scrollbar-thumb-purple-900 overflow-x-scroll '}`}>

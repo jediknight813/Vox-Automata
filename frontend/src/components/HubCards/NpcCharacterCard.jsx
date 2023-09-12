@@ -113,7 +113,7 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
 
 
   return (
-    <div className='flex flex-col w-[95%] max-w-[1200px] rounded-lg min-h-[250px]'>
+    <div className='flex flex-col w-[95%] max-w-[1500px] rounded-lg min-h-[250px]'>
 
         <div className=' flex flex-col md:flex-row gap-4 items-center'>
             <h1 className=' font-Comfortaa text-3xl font-bold'>Npc Characters</h1>

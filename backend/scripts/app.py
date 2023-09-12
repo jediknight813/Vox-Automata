@@ -8,6 +8,7 @@ from text_generation import generate_response, generate_character_local, local_g
 from chat_gpt import getChatGPTResponse, gpt_generate_character, gpt_generate_scenario
 from dotenv import load_dotenv
 from jwt_token_creator import get_current_user
+# from utils import encrypt_message, decrypt_message
 import os
 import requests
 load_dotenv()
@@ -106,6 +107,8 @@ async def get_bot_response(data: dict, current_user: str = Depends(get_current_u
     if current_user != gameData["username"]:
         return
     
+    # print(decrypt_message(data["userMessage"]))
+
     npc_response = generate_response(gameData, data["userMessage"], data["PromptFormat"])
     current_timestamp = int(time.time() * 1000)
     timestamp_str = str(current_timestamp)
