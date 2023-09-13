@@ -127,11 +127,14 @@ const GamePage = () => {
 
                 {(gameData != undefined && playerBase64ImageValue != undefined && npcBase64ImageValue !== undefined) &&
                     <>
-                        <div className=' w-[95%] h-[80vh] md:max-h-[600px] max-w-[800px] flex flex-col gap-5 mb-5 bg-website-primary'>
-                            <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue} scrollRef={scrollRef} isAiResponding={isAiResponding}/>
+                        <div className=' flex flex-col w-[95%] gap-4 max-w-[800px] max-h-[80vh] mb-4 h-auto bg-website-primary p-4'>
+                            <div className='flex md:max-h-[600px] max-w-[800px]  flex-col gap-5 bg-website-primary'>
+                                <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue} scrollRef={scrollRef} isAiResponding={isAiResponding}/>
+                            </div>
+
                             <SendMessage submitUserMessage={SendUserMessage} />
                         </div>
-                        
+
                         {/* chat options */}
                         <div className=' flex flex-wrap w-full justify-center gap-5 mb-20'>
                             {(gameData["messages"].length >= 1) &&

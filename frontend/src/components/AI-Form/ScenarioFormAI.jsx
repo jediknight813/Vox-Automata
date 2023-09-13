@@ -114,7 +114,8 @@ const ScenarioFormAI = () => {
                     ref={textareaRef}
                     value={value}
                     className="resize-none p-4 input w-full scrollbar-none"
-                    onChange={(e) => onChange(e)}
+                    onChange={(e) => setValue(e.target.value)}
+                    onBlur={(e) => onChange(e)}
                 />
             </div>
         )
@@ -159,7 +160,7 @@ const ScenarioFormAI = () => {
                 
             {(usernameValue !== undefined) &&
                 // form parent 
-                <div className='flex font-Comfortaa flex-col p-5 items-center w-full max-w-[600px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md mb-20'>
+                <div className='flex font-Comfortaa flex-col p-5 items-center w-full max-w-[800px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md mb-20'>
                     
                     {isLoading && (
                         <div className='fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-opacity-60'>

@@ -40,7 +40,6 @@ def get_user_entries(collection_name, username, page_number=1, page_size=10):
     # Find documents where the 'username' field matches the provided username
     query = {"username": username}
 
-    # Count the total number of documents that match the query
     total_count = collection.count_documents(query)
 
     # Calculate the skip value and limit for the current page
@@ -48,7 +47,7 @@ def get_user_entries(collection_name, username, page_number=1, page_size=10):
     limit = page_size
 
     # Retrieve documents for the current page
-    cursor = collection.find(query).skip(skip).limit(limit).sort("date_modified", pymongo.DESCENDING)
+    cursor = collection.find(query).skip(skip).sort("last_modified", pymongo.DESCENDING).limit(limit)
 
     for entry in cursor:
         entry["_id"] = str(entry["_id"])

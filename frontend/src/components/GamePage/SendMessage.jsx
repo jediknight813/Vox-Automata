@@ -1,13 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 
 const SendMessage = ( { submitUserMessage } ) => {
   const [userMessageValue, setUserMessageValue] = useState("")
+  const textareaRef = useRef(null);
+
+
+  useEffect(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      }
+    }, [userMessageValue]);
+  
 
   return (
-    <div className=' w-full flex h-[40px] mt-auto'>
-        <input className='p-4 w-[90%] bg-website-secondary text-white rounded-tl-md rounded-bl-md font-Comfortaa outline-none border-none' onChange={(e) => setUserMessageValue(e.target.value)} value={userMessageValue} type='text' />
-        <button className='w-[10%] min-w-[70px] bg-purple-700 rounded-tr-md rounded-br-md font-Comfortaa' onClick={() => { submitUserMessage(userMessageValue); setUserMessageValue("")}}>Send</button>
+    <div className=' w-full flex mt-auto flex-col'>
+        <textarea
+              ref={textareaRef}
+              value={userMessageValue}
+              className=" input resize-none p-4 w-full scrollbar-none border-none"
+              onChange={(e) => setUserMessageValue(e.target.value)}
+          />
+        
+        <button className='btn text-white mt-2 bg-purple-700 uppercase font-Comfortaa' onClick={() => { submitUserMessage(userMessageValue); setUserMessageValue("")}}>Send</button>
     </div>
   )
 }

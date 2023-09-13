@@ -18,7 +18,7 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
         if (moreResults && username != undefined) {
             const response = await GetEntries("PlayerCharacters", username, (pageNumber+1), pageSize);
             const newGames = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
-            setPlayerCharacters((playerCharacters) => [...playerCharacters, ...newGames]);
+            setPlayerCharacters((prevGames) => [...prevGames, ...newGames]);
             setMoreResults(response["more_results"]);
             setPageNumber(pageNumber + 1);
         }

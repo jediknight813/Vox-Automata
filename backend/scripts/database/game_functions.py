@@ -83,7 +83,7 @@ def get_user_games(username, page_number=1, page_size=10):
     limit = page_size
 
     # Retrieve documents for the current page
-    cursor = collection.find(query).skip(skip).limit(limit).sort("date_modified", pymongo.DESCENDING)
+    cursor = collection.find(query).skip(skip).sort("last_modified", pymongo.DESCENDING).limit(limit)
 
     for entry in cursor:
         total_words = 0
@@ -95,13 +95,10 @@ def get_user_games(username, page_number=1, page_size=10):
                 for b in entry["messages"]:
                     total_words += len(b["name"].split(" ")+b["message"].split(" "))
 
-                
-            
             entry["total_words"] = total_words
             del entry["messages"]
 
         entry["_id"] = str(entry["_id"])
-        print(entry)
         user_games.append(entry)
 
 

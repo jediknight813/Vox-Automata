@@ -8,7 +8,6 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
     const [NpcCharacters, setNpcCharacters] = useState([])
     const navigate = useNavigate()
 
-
     const [pageNumber, setPageNumber] = useState(1)
     const [pageSize, setPageSize] = useState(5)
     const [moreResults, setMoreResults] = useState(false)

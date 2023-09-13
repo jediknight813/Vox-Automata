@@ -116,7 +116,7 @@ const CharacterFormAI = () => {
                 
             {(usernameValue !== undefined) &&
                 // form parent 
-                <div className='flex pb-10 font-Comfortaa flex-col p-5 items-center w-full max-w-[600px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md mb-20'>
+                <div className='flex pb-10 font-Comfortaa flex-col p-5 items-center w-full max-w-[800px] gap-5 bg-website-primary h-auto min-h-[300px] mt-20 rounded-md mb-20'>
                     
                     {isLoading && (
                         <div className='fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-opacity-60'>
