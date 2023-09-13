@@ -28,7 +28,6 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
     useEffect(() => {
         const loadInitialGames = async () => {
             const response = await GetUserGames(pageNumber, pageSize);
-            console.log(response)
             const newGames = response["games"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setGames(newGames);
             setMoreResults(response["more_results"]);

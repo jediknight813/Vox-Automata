@@ -134,3 +134,55 @@ from database.game_functions import get_user_games
 # Scenarios
 # NpcCharacters
 # PlayerCharacters
+
+
+def mod_inverse(a, m):
+    for x in range(1, m):
+        if (a * x) % m == 1:
+            return x
+    return None
+
+def affine_encrypt(text, additive_key, multiplicative_key):
+    encrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            is_upper = char.isupper()
+            char = char.lower()
+            char_num = ord(char) - ord('a')
+            encrypted_char_num = (additive_key * char_num + multiplicative_key) % 26
+            encrypted_char = chr(encrypted_char_num + ord('a'))
+            if is_upper:
+                encrypted_char = encrypted_char.upper()
+            encrypted_text += encrypted_char
+        else:
+            encrypted_text += char
+    return encrypted_text
+
+def affine_decrypt(text, additive_key, multiplicative_key):
+    decrypted_text = ""
+    a_inverse = mod_inverse(additive_key, 26)
+    if a_inverse is not None:
+        for char in text:
+            if char.isalpha():
+                is_upper = char.isupper()
+                char = char.lower()
+                char_num = ord(char) - ord('a')
+                decrypted_char_num = (a_inverse * (char_num - multiplicative_key)) % 26
+                decrypted_char = chr(decrypted_char_num + ord('a'))
+                if is_upper:
+                    decrypted_char = decrypted_char.upper()
+                decrypted_text += decrypted_char
+            else:
+                decrypted_text += char
+    return decrypted_text
+
+# Example usage:
+plaintext = "hello?"
+a = 3
+b = 8
+
+encrypted_text = affine_encrypt(plaintext, a, b)
+print("Encrypted:", encrypted_text)
+
+decrypted_text = affine_decrypt(encrypted_text, a, b)
+print("Decrypted:", decrypted_text)

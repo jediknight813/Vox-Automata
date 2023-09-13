@@ -9,4 +9,3 @@ pydantic
 pillow
 bcrypt
 PyJWT
-pycryptodome

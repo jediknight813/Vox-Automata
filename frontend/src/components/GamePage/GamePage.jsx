@@ -5,7 +5,9 @@ import { GetImage } from '../../api/UserRoutes';
 import Cookies from 'js-cookie';
 import ChatHistory from './ChatHistory';
 import SendMessage from './SendMessage';
-import { decryptMessage, encryptMessage } from '../utils';
+import { affineDecrypt, affineEncrypt } from '../utils';
+const VITE_MESSAGE_ENCRYPTION_KEY_MULTIPLICATIVE_KEY = import.meta.env.VITE_MESSAGE_ENCRYPTION_KEY_MULTIPLICATIVE_KEY ;
+const VITE_MESSAGE_ENCRYPTION_KEY_ADDITIVE_KEY = import.meta.env.VITE_MESSAGE_ENCRYPTION_KEY_ADDITIVE_KEY;
 
 
 const GamePage = () => {
@@ -16,18 +18,25 @@ const GamePage = () => {
     const [playerBase64ImageValue, setPlayerBase64ImageValue] = useState()
     const [npcBase64ImageValue, setNpcBase64ImageValue] = useState()
     const scrollRef = useRef(null);
-
     // live text streaming hooks.
     const [isMessageStreaming, setIsMessageStreaming] = useState(false)
     const [streamingMessage, setStreamingMessage] = useState(false)
     const [isAiResponding, setIsAiResponding] = useState(false)
 
+
+    const handleDecryption = (message) => {
+        return affineDecrypt(message, (Number(VITE_MESSAGE_ENCRYPTION_KEY_ADDITIVE_KEY)), (Number(VITE_MESSAGE_ENCRYPTION_KEY_MULTIPLICATIVE_KEY)))
+    } 
     
+    const handleEncryption =  (message) => {
+        return affineEncrypt(message, (Number(VITE_MESSAGE_ENCRYPTION_KEY_ADDITIVE_KEY)), (Number(VITE_MESSAGE_ENCRYPTION_KEY_MULTIPLICATIVE_KEY)))
+    }  
 
     const SendUserMessage = (userMessageValue) => {
         if (userMessageValue == "") {
             return
         }
+
         setIsAiResponding(true)
         const currentTimestamp = new Date().getTime();
         const timestampStr = currentTimestamp.toString();
@@ -40,10 +49,10 @@ const GamePage = () => {
 
 
     const getBotResponseToPlayer = async (userMessageValue, timestampStr) => {
-        const response = await GetBotResponse(GameId, usernameValue, userMessageValue, timestampStr, Cookies.get('PromptFormat'))
+        const response = await GetBotResponse(GameId, usernameValue, handleEncryption(userMessageValue), timestampStr, Cookies.get('PromptFormat'))
         setGameData(gameData => ({
             ...gameData,
-            messages: [...gameData.messages, {"name": gameData["npc"]["name"], "type": "bot", "message": response["response"], timestamp: response["timestamp"]}]
+            messages: [...gameData.messages, {"name": gameData["npc"]["name"], "type": "bot", "message": handleDecryption(response["response"]), timestamp: response["timestamp"]}]
         }));
         setIsAiResponding(false)
     }
@@ -78,6 +87,9 @@ const GamePage = () => {
                 if (response["message"]["username"] !== usernameValue) {
                     navigate("/Hub")
                 }
+                response["message"]["messages"].forEach(element => {
+                    element["message"] = handleDecryption(element["message"])
+                });
                 setGameData(response["message"])
             }
             getGameData()
@@ -127,8 +139,8 @@ const GamePage = () => {
 
                 {(gameData != undefined && playerBase64ImageValue != undefined && npcBase64ImageValue !== undefined) &&
                     <>
-                        <div className=' flex flex-col w-[95%] gap-4 max-w-[800px] max-h-[80vh] mb-4 h-auto bg-website-primary p-4'>
-                            <div className='flex md:max-h-[600px] max-w-[800px]  flex-col gap-5 bg-website-primary'>
+                        <div className=' flex flex-col w-[95%] max-w-[800px] min-h-[300px] h-auto mb-4 bg-website-primary p-4'>
+                            <div className='flex mb-4 md:max-h-[600px] max-w-[800px] flex-col gap-5 bg-website-primary'>
                                 <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue} scrollRef={scrollRef} isAiResponding={isAiResponding}/>
                             </div>
 

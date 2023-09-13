@@ -8,7 +8,7 @@ from text_generation import generate_response, generate_character_local, local_g
 from chat_gpt import getChatGPTResponse, gpt_generate_character, gpt_generate_scenario
 from dotenv import load_dotenv
 from jwt_token_creator import get_current_user
-# from utils import encrypt_message, decrypt_message
+from utils import affine_decrypt, affine_encrypt, encrypt_messages
 import os
 import requests
 load_dotenv()
@@ -17,6 +17,9 @@ MONGO_URL = os.environ.get("MONGO_URL")
 import uvicorn
 import time
 
+
+ENCRYPTION_KEY_MULTIPLICATIVE_KEY = os.environ.get("ENCRYPTION_KEY_MULTIPLICATIVE_KEY")
+ENCRYPTION_KEY_ADDITIVE_KEY = os.environ.get("ENCRYPTION_KEY_ADDITIVE_KEY")
 
 app = FastAPI()
 
@@ -68,7 +71,8 @@ async def remove_entry(data: dict, current_user: str = Depends(get_current_user)
 @app.post("/get_game")
 async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
-    entries = get_user_game(data["collection_name"], data["username"], data["_id"])
+    entries = get_user_game(data["collection_name"], current_user, data["_id"])
+    entries["message"]["messages"] = encrypt_messages(entries["message"]["messages"])
     return {"message": entries}
 
 
@@ -106,10 +110,10 @@ async def get_bot_response(data: dict, current_user: str = Depends(get_current_u
 
     if current_user != gameData["username"]:
         return
-    
-    # print(decrypt_message(data["userMessage"]))
 
-    npc_response = generate_response(gameData, data["userMessage"], data["PromptFormat"])
+    UserMessage = affine_decrypt(data["userMessage"], int(ENCRYPTION_KEY_ADDITIVE_KEY), int(ENCRYPTION_KEY_MULTIPLICATIVE_KEY))
+
+    npc_response = generate_response(gameData, UserMessage, data["PromptFormat"])
     current_timestamp = int(time.time() * 1000)
     timestamp_str = str(current_timestamp)
 
@@ -119,10 +123,10 @@ async def get_bot_response(data: dict, current_user: str = Depends(get_current_u
     # get number of words typed by the user and save it to user stats.
     update_user_profile_stat(current_user, "typed_words", len(data["userMessage"].split()))
 
-    update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": data["userMessage"], "timestamp": data["timestamp"]})
+    update_game_messages(data["username"], game_id, {"name": gameData["player"]["name"], "type": "user", "message": UserMessage, "timestamp": data["timestamp"]})
     update_game_messages(data["username"], game_id, {"name": gameData["npc"]["name"], "type": "bot", "message": npc_response, "timestamp": timestamp_str})
 
-    return {"message": {"response": npc_response, "timestamp": timestamp_str}}
+    return {"message": {"response": affine_encrypt(npc_response, int(ENCRYPTION_KEY_ADDITIVE_KEY), int(ENCRYPTION_KEY_MULTIPLICATIVE_KEY)), "timestamp": timestamp_str}}
 
 
 @app.post("/get_user_game_entries")

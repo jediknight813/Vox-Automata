@@ -26,7 +26,6 @@ const ScenarioCard = ( { type, username, setSelected=undefined, selectedId="", f
     useEffect(() => {
         const loadInitialGames = async () => {
             const response = await GetEntries("Scenarios", username, pageNumber, pageSize);
-            console.log(response)
             const newGames = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setScenario(newGames);
             setMoreResults(response["more_results"]);

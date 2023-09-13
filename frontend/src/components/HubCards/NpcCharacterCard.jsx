@@ -26,7 +26,6 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
     useEffect(() => {
         const loadInitialGames = async () => {
             const response = await GetEntries("NpcCharacters", username, pageNumber, pageSize);
-            console.log(response)
             const newEntries = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setNpcCharacters(newEntries);
             setMoreResults(response["more_results"]);

@@ -1,32 +1,63 @@
 import os
-from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 load_dotenv()
-from Crypto.Random import get_random_bytes
-from base64 import b64encode, b64decode
-from Crypto.Cipher import AES
+
+ENCRYPTION_KEY_MULTIPLICATIVE_KEY = os.environ.get("ENCRYPTION_KEY_MULTIPLICATIVE_KEY")
+ENCRYPTION_KEY_ADDITIVE_KEY = os.environ.get("ENCRYPTION_KEY_ADDITIVE_KEY")
+
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+def mod_inverse(a, m):
+    m0, x0, x1 = m, 0, 1
+
+    while a > 1:
+        q = a // m
+        m, a = a % m, m
+        x0, x1 = x1 - q * x0, x0
+
+    return x1 % m0 if a == 1 else None
 
 
-MESSAGE_ENCRYPTION_KEY = os.environ.get("MESSAGE_ENCRYPTION_KEY")
-key_bytes = bytes.fromhex(MESSAGE_ENCRYPTION_KEY)
+def affine_encrypt(text, a, b):
+    encrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            is_upper = char.isupper()
+            char = char.lower()
+            char_num = ord(char) - ord('a')
+            encrypted_char_num = (a * char_num + b) % 26
+            encrypted_char = chr(encrypted_char_num + ord('a'))
+            if is_upper:
+                encrypted_char = encrypted_char.upper()
+            encrypted_text += encrypted_char
+        else:
+            encrypted_text += char
+    return encrypted_text
 
 
-def encrypt_message(plain_text):
-    cipher = AES.new(key_bytes, AES.MODE_EAX)
-    nonce = cipher.nonce
-    ciphertext, tag = cipher.encrypt_and_digest(plain_text.encode('utf-8'))
-    return b64encode(nonce + ciphertext + tag).decode('utf-8')
+def affine_decrypt(text, a, b):
+    decrypted_text = ""
+    a_inverse = mod_inverse(a, 26)
+    if a_inverse is not None:
+        for char in text:
+            if char.isalpha():
+                is_upper = char.isupper()
+                char = char.lower()
+                char_num = ord(char) - ord('a')
+                decrypted_char_num = (a_inverse * (char_num - b)) % 26
+                decrypted_char = chr(decrypted_char_num + ord('a'))
+                if is_upper:
+                    decrypted_char = decrypted_char.upper()
+                decrypted_text += decrypted_char
+            else:
+                decrypted_text += char
+    return decrypted_text
 
-def decrypt_message(ciphertext):
 
-    print(ciphertext)
-
-    ciphertext = b64decode(ciphertext.encode('utf-8'))
-    nonce = ciphertext[:16]
-    tag = ciphertext[-16:]
-    ciphertext = ciphertext[16:-16]
-    cipher = AES.new(key_bytes, AES.MODE_EAX, nonce=nonce)
-    decrypted_text = cipher.decrypt_and_verify(ciphertext, tag)
-    print(decrypted_text.decode('utf-8'))
-    return decrypted_text.decode('utf-8')
-
+def encrypt_messages(messages):
+    for message in messages:
+        message["message"] = affine_encrypt(message["message"], int(ENCRYPTION_KEY_ADDITIVE_KEY), int(ENCRYPTION_KEY_MULTIPLICATIVE_KEY))
+    return messages

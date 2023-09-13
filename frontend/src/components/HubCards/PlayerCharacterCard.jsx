@@ -27,7 +27,6 @@ const PlayerCharacterCard = ( { type, username, setSelected=undefined, selectedI
     useEffect(() => {
         const loadInitialGames = async () => {
             const response = await GetEntries("PlayerCharacters", username, pageNumber, pageSize);
-            console.log(response)
             const newGames = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setPlayerCharacters(newGames);
             setMoreResults(response["more_results"]);
