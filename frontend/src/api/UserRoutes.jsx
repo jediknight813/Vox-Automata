@@ -28,6 +28,14 @@ export const GetImage = async (_id) => {
 }
 
 
+export const GetImages = async (number_of_images) => {
+    const response = await axios.post(apiUrl+"/get_images", {
+        params: {"number_of_images": number_of_images}
+    });
+    return response["data"]["message"]
+}
+
+
 export const GetUserProfileDetails = async (username) => {
     const response = await axios.post(apiUrl+"/get_user_profile_details", {
         params: {"username": username}

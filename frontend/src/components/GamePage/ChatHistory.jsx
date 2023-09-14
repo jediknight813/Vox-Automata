@@ -163,7 +163,7 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
                 <div className="chat-header gap-2 flex items-center ml-auto">
                         <h1 className='ml-2'>{npc_data["name"]}</h1>
                     </div>
-                    <div className="chat-bubble bg-website-secondary text-white font-Comfortaa"><span className="loading loading-dots loading-md"></span></div>
+                    <div className="ml-2 chat-bubble bg-website-secondary text-white font-Comfortaa"><span className="loading loading-dots loading-md"></span></div>
                 </div>
 
             </div>

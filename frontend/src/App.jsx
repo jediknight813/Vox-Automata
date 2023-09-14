@@ -83,7 +83,6 @@ function App() {
           <Route path="/CreateGame" element={<Form FormKeys={Game_Form_Keys} Type="Create" name="Create Game" fieldName="Games" />} />
           <Route path="/CurrentGame/:GameId" element={<GamePage  />} />
 
-
         </Routes>
       </BrowserRouter>
     </div>

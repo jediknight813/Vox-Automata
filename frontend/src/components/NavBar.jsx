@@ -107,7 +107,7 @@ const NavBar = () => {
         </dialog>
 
 
-        <div className="navbar bg-website-primary">
+        <div className="navbar bg-website-primary z-20">
 
             <div className="flex-1">
                 <a onClick={() => navigate("/")} className="btn btn-ghost normal-case text-3xl font-sedgwick-ave-display">Vox Automata</a>

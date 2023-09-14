@@ -177,12 +177,16 @@ def affine_decrypt(text, additive_key, multiplicative_key):
     return decrypted_text
 
 # Example usage:
-plaintext = "hello?"
-a = 3
-b = 8
+# plaintext = "hello?"
+# a = 3
+# b = 8
 
-encrypted_text = affine_encrypt(plaintext, a, b)
-print("Encrypted:", encrypted_text)
+# encrypted_text = affine_encrypt(plaintext, a, b)
+# print("Encrypted:", encrypted_text)
 
-decrypted_text = affine_decrypt(encrypted_text, a, b)
-print("Decrypted:", decrypted_text)
+# decrypted_text = affine_decrypt(encrypted_text, a, b)
+# print("Decrypted:", decrypted_text)
+
+from database.image_functions import get_number_of_images
+
+get_number_of_images(10)

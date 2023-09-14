@@ -128,8 +128,8 @@ const GamePage = () => {
                     <h3 className="font-bold text-lg">This will reset the story.</h3>
                     <p className="py-4">Are you sure you want to continue?</p>
                     <div className="modal-action">
-                    <button onClick={() => CallResetStory()} className="btn outline-none border-none ">Confirm</button>
-                    <button className="btn outline-none border-none ">Close</button>
+                    <button onClick={() => CallResetStory()} className="btn outline-none border-none bg-website-accent">Confirm</button>
+                    <button className="btn outline-none border-none btn-error">Close</button>
                     </div>
                 </form>
             </dialog>
@@ -140,7 +140,7 @@ const GamePage = () => {
                 {(gameData != undefined && playerBase64ImageValue != undefined && npcBase64ImageValue !== undefined) &&
                     <>
                         <div className=' flex flex-col w-[95%] max-w-[800px] min-h-[300px] h-auto mb-4 bg-website-primary p-4'>
-                            <div className='flex mb-4 md:max-h-[600px] max-w-[800px] flex-col gap-5 bg-website-primary'>
+                            <div className='flex mb-4 md:max-h-[600px] h-[70vh] max-w-[800px] flex-col gap-5 bg-website-primary'>
                                 <ChatHistory chat_messages={gameData["messages"]} player_data={gameData["player"]} npc_data={gameData["npc"]} player_image={playerBase64ImageValue} npc_image={npcBase64ImageValue} scrollRef={scrollRef} isAiResponding={isAiResponding}/>
                             </div>
 

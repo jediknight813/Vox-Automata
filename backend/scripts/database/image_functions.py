@@ -220,3 +220,16 @@ def generate_image_local(width, height, prompt, NegativePrompt=""):
     image.save(folder_path+str(image_count+1)+".jpeg")
 
     return folder_path+str(image_count+1)+".jpeg"
+
+
+def get_number_of_images(number_of_images=10):
+    entries = []
+    collection = db["images"]
+
+    cursor = collection.find().sort("_id", pymongo.DESCENDING).limit(number_of_images)
+
+    for document in cursor:
+        if "image_base64" in document:
+            entries.append({"image_base64": document["image_base64"]})
+
+    return entries

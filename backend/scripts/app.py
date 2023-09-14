@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.auth_functions import login_user, create_user
 from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry, update_user_profile_stat, get_profile_stats
 from database.game_functions import get_user_game, update_game_messages, check_for_streaming_message, get_user_games
-from database.image_functions import find_image_base64
+from database.image_functions import find_image_base64, get_number_of_images
 from text_generation import generate_response, generate_character_local, local_generate_scenario
 from chat_gpt import getChatGPTResponse, gpt_generate_character, gpt_generate_scenario
 from dotenv import load_dotenv
@@ -312,11 +312,13 @@ async def get_user_profile_details(data: dict):
     return { "message": stats }
 
 
-
-
+@app.post("/get_images")
+async def get_images(data: dict):
+    data = data["params"]
+    images = get_number_of_images(data["number_of_images"])
+    return { "message": images }
 
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8888)
-
 
