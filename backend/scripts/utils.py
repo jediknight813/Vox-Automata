@@ -57,7 +57,24 @@ def affine_decrypt(text, a, b):
     return decrypted_text
 
 
+def decrypt_text(text):
+    return affine_decrypt(text, int(ENCRYPTION_KEY_ADDITIVE_KEY), int(ENCRYPTION_KEY_MULTIPLICATIVE_KEY))
+
+
+def encrypt_text(text):
+    return affine_encrypt(text, int(ENCRYPTION_KEY_ADDITIVE_KEY), int(ENCRYPTION_KEY_MULTIPLICATIVE_KEY))
+
+
 def encrypt_messages(messages):
     for message in messages:
         message["message"] = affine_encrypt(message["message"], int(ENCRYPTION_KEY_ADDITIVE_KEY), int(ENCRYPTION_KEY_MULTIPLICATIVE_KEY))
     return messages
+
+
+def encrypt_fields(fields, field_object):
+    print(fields, field_object)
+
+    for field in fields:
+        field_object[field] = encrypt_text(field_object[field])
+
+    return object

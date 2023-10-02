@@ -4,11 +4,12 @@ from database.auth_functions import login_user, create_user
 from database.user_functions import insert_entry, remove_user_entry, get_single_user_entry, get_user_entries, add_value_document, update_single_user_entry, update_user_profile_stat, get_profile_stats
 from database.game_functions import get_user_game, update_game_messages, check_for_streaming_message, get_user_games
 from database.image_functions import find_image_base64, get_number_of_images
+from database.npc_functions import get_user_npc_characters
 from text_generation import generate_response, generate_character_local, local_generate_scenario
 from chat_gpt import getChatGPTResponse, gpt_generate_character, gpt_generate_scenario
 from dotenv import load_dotenv
 from jwt_token_creator import get_current_user
-from utils import affine_decrypt, affine_encrypt, encrypt_messages
+from utils import affine_decrypt, affine_encrypt, encrypt_messages, encrypt_fields
 import os
 import requests
 load_dotenv()
@@ -25,8 +26,7 @@ app = FastAPI()
 
 
 origins = [
-    # FRONTEND_URL,
-    "http://localhost:5173",
+    FRONTEND_URL,
 ]
 
 
@@ -74,6 +74,21 @@ async def get_game(data: dict, current_user: str = Depends(get_current_user)):
     entries = get_user_game(data["collection_name"], current_user, data["_id"])
     entries["message"]["messages"] = encrypt_messages(entries["message"]["messages"])
     return {"message": entries}
+
+
+# npc character routes
+@app.post("/user_npc_characters")
+async def npc_characters(data: dict, current_user: str = Depends(get_current_user)):
+    data = data["params"]
+    entries, more_pages  = get_user_npc_characters(data["username"], data["page_number"], data["page_size"])
+    # for character in entries:
+    #     character = encrypt_fields(["name", "wearing", "personality", "appearance", "age", "gender"], character)
+    
+    entries_data = {
+        "entries": entries,
+        "more_results": more_pages
+    }
+    return {"message": entries_data}
 
 
 @app.post("/undo_last_message")

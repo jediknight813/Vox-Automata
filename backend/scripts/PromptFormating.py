@@ -23,6 +23,39 @@ AlpacaFormat = guidance('''
 ''')
 
 
+NpcThinking = guidance('''
+    You are {{npc_name}}, write all responses in character as {{npc_name}}, you will responed with what you are thinking about first, then you will respond with what you want to say in character as {{npc_name}}.
+    Respond to everything in first person, be descriptive with your responses. 
+    ### Instruction:
+    {{npc_name}}'s Persona: {{npc_persona}}.
+
+    Scenario: {{scenario}}.
+
+    {{history}}
+    {{player_name}}: {{question}}
+
+    ### Response:
+    What is {{npc_name}} thinking about right now: {{~gen "thoughts" temperature=0.8 stop='\n' }}      
+    What does {{npc_name}} say to {{player_name}}: {{~gen "response" temperature=0.8 stop='\n' }}
+''')
+
+
+MagpieFormat = guidance('''
+    Write an engaging response from {{npc_name}} to {{player_name}} in a descriptive writing style. Express {{npc_name}}'s actions and sensory perceptions in vivid detail. Proactively advance the conversation with narrative prose as {{npc_name}}. Use informal language when composing dialogue, taking into account {{npc_name}}'s personality and communication style.
+
+    ### Instruction:
+    {{npc_name}}'s Persona: {{npc_persona}}.
+
+    Scenario: {{scenario}}.
+
+    {{history}}
+    {{player_name}}: {{question}}
+
+    ### Response:
+    {{npc_name}}: {{~gen "response" temperature=0.8 stop='\n' }}
+''')
+
+
 Pygmalion2Format = guidance('''
    <|system|> Enter RP mode. Pretend to be {{npc_name}} whose persona follows:
    {{npc_persona}}, {{npc_name}} is currently with {{player_name}}.

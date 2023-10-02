@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import json
 load_dotenv()
-from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation, LocalCharacterGeneration, LocalSenarioGeneration
+from PromptFormating import AlpacaFormat, Pygmalion2Format, ScenarioLocation, LocalCharacterGeneration, LocalSenarioGeneration, MagpieFormat, NpcThinking
 
 
 def configure_vars():
@@ -90,6 +90,36 @@ def generate_response(gameData, userMessage, promptFormat="Alpaca"):
 
         return bot_response
 
+    if promptFormat == "MagpieFormat":
+        chat_history_string = create_chat_history_string(gameData, "<|user|> ", "<|model|> ")
+        npc_response = MagpieFormat(
+            npc_name=gameData["npc"]["name"],
+            npc_persona=create_npc_persona(gameData["npc"]),
+            player_name=gameData["player"]["name"],
+            scenario=gameData["scenario"]["scenario"],
+            question=userMessage,
+            history=chat_history_string,
+        )
+
+        bot_response = npc_response.variables()["response"].strip()
+
+        return bot_response
+
+    if promptFormat == "NpcThinking":
+        chat_history_string = create_chat_history_string(gameData, "<|user|> ", "<|model|> ")
+        npc_response = NpcThinking(
+            npc_name=gameData["npc"]["name"],
+            npc_persona=create_npc_persona(gameData["npc"]),
+            player_name=gameData["player"]["name"],
+            scenario=gameData["scenario"]["scenario"],
+            question=userMessage,
+            history=chat_history_string,
+        )
+
+        bot_response = npc_response.variables()["thoughts"].strip()+" "+npc_response.variables()["response"].strip()
+
+        return bot_response
+    
 
 def create_npc_persona(npcData):
     persona = f"{npcData['name'].capitalize()} is a {npcData['age']} {npcData['gender']} with a {npcData['appearance']} build. "

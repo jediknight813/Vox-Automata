@@ -18,7 +18,8 @@ function App() {
       {"name": "name", "type": "string"},
       {"name": "wearing", "type": "string"},
       {"name":"age", "type": "array", "array_values": ["young adult", "middle age", "old"]},
-      {"name":"gender", "type": "array", "array_values": ["male", "female"]}
+      {"name":"gender", "type": "array", "array_values": ["male", "female"]},
+      {"name": "public", "type": "array", "array_values": ["true", "false"]},
     ]
 
     const NPC_Character_Form_Keys = [
@@ -27,7 +28,8 @@ function App() {
     {"name": "appearance", "type": "string"},
     {"name": "wearing", "type": "string"},
     {"name":"age", "type": "array", "array_values": ["young adult", "middle age", "old"]},
-    {"name":"gender", "type": "array", "array_values": ["male", "female"]}
+    {"name":"gender", "type": "array", "array_values": ["male", "female"]},
+    {"name": "public", "type": "array", "array_values": ["true", "false"]},
   ]
 
 
@@ -36,6 +38,7 @@ function App() {
     {"name": "scenario", "type": "string"},
     {"name": "npc", "type": "other", "component": NpcCharacterCard},
     {"name": "player", "type": "other", "component": PlayerCharacterCard},
+    {"name": "public", "type": "array", "array_values": ["true", "false"]},
   ]
 
 

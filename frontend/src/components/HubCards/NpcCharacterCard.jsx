@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import { GetEntries, RemoveEntry } from '../../api/FormRoutes'
+import { RemoveEntry } from '../../api/FormRoutes'
 import { useNavigate } from 'react-router-dom'
 import { GetImage } from '../../api/UserRoutes'
+import { GetUserNpcs } from '../../api/NpcRoutes'
 
 
 const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="", fieldName="" } ) => {
@@ -15,7 +16,7 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
 
     const loadMoreGames = async () => {
         if (moreResults && username != undefined) {
-            const response = await GetEntries("NpcCharacters", username, pageNumber+1, pageSize);
+            const response = await GetUserNpcs(username, pageNumber+1, pageSize);
             const newEntries = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setNpcCharacters((NpcCharacters) => [...NpcCharacters, ...newEntries]);
             setMoreResults(response["more_results"]);
@@ -25,7 +26,7 @@ const NpcCharacterCard = ( { type, username, setSelected=undefined, selectedId="
 
     useEffect(() => {
         const loadInitialGames = async () => {
-            const response = await GetEntries("NpcCharacters", username, pageNumber, pageSize);
+            const response = await GetUserNpcs(username, pageNumber, pageSize);
             const newEntries = response["entries"].sort((a, b) => parseInt(b.last_modified) - parseInt(a.last_modified));
             setNpcCharacters(newEntries);
             setMoreResults(response["more_results"]);

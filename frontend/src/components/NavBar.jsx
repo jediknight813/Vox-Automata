@@ -15,7 +15,7 @@ const NavBar = () => {
         author_repo: '',
         author_model: '',
     });
-    const PromptFormats = ["Alpaca", "Pygmalion2Format"]
+    const PromptFormats = ["Alpaca", "Pygmalion2Format", "MagpieFormat", "NpcThinking"]
     const [currentPromptFormat, setPromptFormat] = useState()
 
 
