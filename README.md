@@ -5,7 +5,10 @@ A website to make chatting with AI characters locally easy.
 # # Features
 
 Easy character generation:
-https://github.com/jediknight813/Vox-Automata/assets/17935336/165b0cce-157c-4801-8a7a-33fea3d55b94
+
+
+![ezgif com-video-to-gif](https://github.com/jediknight813/Vox-Automata/assets/17935336/709869b0-60ea-4f3b-98d2-80c6c3f55463)
+
 
 
 Easy senario creation:
