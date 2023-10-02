@@ -25,7 +25,7 @@ You can also create senarios without AI if you want to do it manually.
 
 # Other features:
 
-* You can create separate user accounts, useful if you want to share access locally and keep characters separate.
-* Keeps track of words generated and typed.
-* You can undo sent messages or just restart a chat from the beginning.
-* If a character or scenario isn't to your liking you can edit it.
+- You can create separate user accounts, useful if you want to share access locally and keep characters separate.
+- Keeps track of words generated and typed.
+- You can undo sent messages or just restart a chat from the beginning.
+- If a character or scenario isn't to your liking you can edit it.
