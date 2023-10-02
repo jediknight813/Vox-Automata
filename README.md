@@ -1,6 +1,6 @@
 # Vox-Automata
 
-A website that makes chatting with AI characters locally or with chat-gpt easy.
+A website for chatting with AI characters locally or with chat-gpt easily.
 
 ![ezgif com-optimize](https://github.com/jediknight813/Vox-Automata/assets/17935336/a12b880e-4d97-4ae0-836c-4de1211dc56e)
 
