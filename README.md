@@ -29,3 +29,4 @@ You can also create senarios without AI if you want to do it manually.
 - Keeps track of words generated and typed.
 - You can undo sent messages or just restart a chat from the beginning.
 - If a character or scenario isn't to your liking you can edit it.
+- it also works on mobile devices and tablets.
