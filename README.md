@@ -1,8 +1,8 @@
 # Vox-Automata
 
-A website to make chatting with AI characters locally easy.
+A website that makes chatting with AI characters locally or with chat-gpt easy.
 
-# # Features
+# Features
 
 Easy character generation with AI assistance:
 
@@ -11,4 +11,5 @@ Easy character generation with AI assistance:
 
 Easy senario creation with AI assistance:
 
+![ezgif com-video-to-gif](https://github.com/jediknight813/Vox-Automata/assets/17935336/34b85f7f-263f-4749-b0f8-878573bf53ab)
 
