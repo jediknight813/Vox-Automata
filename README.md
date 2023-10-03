@@ -3,7 +3,11 @@
 A website for chatting with AI characters locally or with chat-gpt easily.
 
 
+https://github.com/jediknight813/Vox-Automata/assets/17935336/272f5a34-a845-4f06-8e75-cf6ec04d2bb6
+
+
 # Key features
+
 
 ## Easy character generation with AI assistance:
 You can create characters without AI if you want to do it manually.
