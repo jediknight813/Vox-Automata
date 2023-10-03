@@ -10,7 +10,7 @@ https://github.com/jediknight813/Vox-Automata/assets/17935336/81d190d3-8f47-4577
 
 
 ## Easy character generation with AI assistance:
-You can create characters without AI if you want to do it manually.
+You can also create characters without AI if you want to do it manually.
 
 
 https://github.com/jediknight813/Vox-Automata/assets/17935336/738b7d2f-e442-42da-af15-9b8f870537be
