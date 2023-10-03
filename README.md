@@ -2,26 +2,25 @@
 
 A website for chatting with AI characters locally or with chat-gpt easily.
 
-![ezgif com-optimize](https://github.com/jediknight813/Vox-Automata/assets/17935336/a12b880e-4d97-4ae0-836c-4de1211dc56e)
-
 
 # Key features
 
 ## Easy character generation with AI assistance:
 You can create characters without AI if you want to do it manually.
 
-![ezgif com-video-to-gif (1)](https://github.com/jediknight813/Vox-Automata/assets/17935336/b96406f4-ed65-42a8-8a6b-a1c6527cc44e)
+https://github.com/jediknight813/Vox-Automata/assets/17935336/ffb003ac-ca9b-4937-988b-30b488b25e1c
 
 
 ## Easy senario creation with AI assistance:
 You can also create senarios without AI if you want to do it manually.
 
-![ezgif com-video-to-gif](https://github.com/jediknight813/Vox-Automata/assets/17935336/34b85f7f-263f-4749-b0f8-878573bf53ab)
+https://github.com/jediknight813/Vox-Automata/assets/17935336/2ceb6642-e156-4d7f-bad8-19dc0fd33cb6
 
 
 ## Simple chat window for characters:
 
-![ezgif com-video-to-gif (1)](https://github.com/jediknight813/Vox-Automata/assets/17935336/07a0207e-e6ef-4a8e-8229-7035d35c34d6)
+https://github.com/jediknight813/Vox-Automata/assets/17935336/89cb3dbf-8ed7-4702-9446-cc00ec834bda
+
 
 # Other features:
 
