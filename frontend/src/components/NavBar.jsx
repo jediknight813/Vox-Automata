@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
-import defaultProfileImage from "../components/GamePage/images/DefaultProfileImage.png"
+import defaultProfileImage from "./ChatPage/images/DefaultProfileImage.png"
 import { GetModels, UnloadModels, LoadModel, DownloadModel } from '../api/ModelRoutes'
 
 
@@ -15,6 +15,7 @@ const NavBar = () => {
         author_repo: '',
         author_model: '',
     });
+    const [gpuLayers, setGpuLayers] = useState(0)
     const PromptFormats = ["Alpaca", "Pygmalion2Format", "MagpieFormat", "NpcThinking"]
     const [currentPromptFormat, setPromptFormat] = useState()
 
@@ -25,8 +26,10 @@ const NavBar = () => {
 
         const getNpcImage = async () => {
             var models_response = await GetModels()
-            setModels(models_response)
-            setSelectedModel(models_response[0])
+            if (models_response !== undefined) {
+                setModels(models_response)
+                setSelectedModel(models_response[0])
+            }
         }
         getNpcImage()
 
@@ -72,7 +75,7 @@ const NavBar = () => {
                 </select>
                 <div className=' flex gap-3 items-center'>
                     <button onClick={() => UnloadModels()} className=' btn bg-red-800 text-white hover:bg-red-800'>Unload Model</button>
-                    <button onClick={() => LoadModel(selectedModel)} className=' btn text-white bg-website-accent hover:bg-website-accent'>Load Model</button>
+                    <button onClick={() => LoadModel(selectedModel, gpuLayers)} className=' btn text-white bg-website-accent hover:bg-website-accent'>Load Model</button>
                 </div>
             </div>
 
@@ -96,6 +99,11 @@ const NavBar = () => {
                 <input className=' input' placeholder="Author Model" onChange={(e) => setModelFormData({ ...modelFormData, author_model: e.target.value })}/>
                 
                 <button onClick={() => DownloadModel(modelFormData)} className='btn outline-none border-none text-white bg-website-accent hover:bg-website-accent'>Start Download</button>
+            </div>
+
+            <div className=' flex flex-col gap-3'>
+                <h1 className=' mt-5'>Gpu Layers</h1>
+                <input className=' input' placeholder="35" onChange={(e) => setGpuLayers(e.target.value)} />
             </div>
 
 

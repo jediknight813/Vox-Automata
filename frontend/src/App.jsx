@@ -7,9 +7,10 @@ import Form from "./components/Form"
 import NpcCharacterCard from "./components/HubCards/NpcCharacterCard"
 import PlayerCharacterCard from "./components/HubCards/PlayerCharacterCard"
 import SenarioCard from "./components/HubCards/ScenarioCard"
-import GamePage from "./components/GamePage/GamePage"
+import ChatPage from "./components/ChatPage/ChatPage"
 import ScenarioFormAI from "./components/AI-Form/ScenarioFormAI"
 import CharacterFormAI from "./components/AI-Form/CharacterFormAI"
+import VisualNovelGame from "./components/VisualNovel/VisualNovelGame"
 
 
 function App() {
@@ -67,6 +68,8 @@ function App() {
           <Route path="/ScenarioFormAI" element={<ScenarioFormAI />} />
           <Route path="/CharacterFormAI" element={<CharacterFormAI />} />
 
+          <Route path="/VisualNovel" element={<VisualNovelGame />} />
+
           {/* create and edit routes for player characters */}
           <Route path="/CreatePlayerCharacter" element={<Form FormKeys={Player_Character_Form_Keys} Type="Create" name="Create Player Character" fieldName="PlayerCharacters" />} />
           <Route path="/EditPlayerCharacter/:entryId" element={<Form FormKeys={Player_Character_Form_Keys} Type="Edit" name="Edit Player Character" fieldName="PlayerCharacters" />} />
@@ -83,8 +86,8 @@ function App() {
 
 
           {/* create and edit routes for games */}
-          <Route path="/CreateGame" element={<Form FormKeys={Game_Form_Keys} Type="Create" name="Create Game" fieldName="Games" />} />
-          <Route path="/CurrentGame/:GameId" element={<GamePage  />} />
+          <Route path="/CreateChat" element={<Form FormKeys={Game_Form_Keys} Type="Create" name="Create Chat" fieldName="Games" />} />
+          <Route path="/CurrentGame/:GameId" element={<ChatPage  />} />
 
         </Routes>
       </BrowserRouter>

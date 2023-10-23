@@ -130,9 +130,9 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
     <div className='flex flex-col w-screen md:w-[95%] max-w-[1500px] rounded-lg min-h-[250px] mb-20'>
 
         <div className=' flex flex-col md:flex-row gap-4 items-center'>
-            <h1 className=' font-Comfortaa text-3xl font-bold'>Games</h1>
+            <h1 className=' font-Comfortaa text-3xl font-bold'>Chats</h1>
             {(Game.length >= 1 && type != "edit") &&
-                <button onClick={() => navigate("/CreateGame")} className={`cursor-pointer font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent`}>Create Game</button>
+                <button onClick={() => navigate("/CreateChat")} className={`cursor-pointer font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent`}>Create Chat</button>
             }
             </div>
 
@@ -141,8 +141,8 @@ const GameCard = ( { type, username, setSelected=undefined, selectedId="", field
             {Game.length == 0 ?
                 <>
                     <div className=' flex flex-col items-center justify-center w-full gap-4'>
-                        <h1 className='font-Comfortaa self-center text-center'>No Games Found.</h1>
-                        <button onClick={() => navigate("/CreateGame")} className={`cursor-pointer font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent`}>Create Game</button>
+                        <h1 className='font-Comfortaa self-center text-center'>No Chats Found.</h1>
+                        <button onClick={() => navigate("/CreateChat")} className={`cursor-pointer font-Comfortaa pr-2 pl-2 rounded-md font-bold flex-none h-[50px] bg-website-accent`}>Create Chat</button>
                     </div>
                 </>
             :

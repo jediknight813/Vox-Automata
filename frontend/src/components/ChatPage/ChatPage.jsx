@@ -10,7 +10,7 @@ const VITE_MESSAGE_ENCRYPTION_KEY_MULTIPLICATIVE_KEY = import.meta.env.VITE_MESS
 const VITE_MESSAGE_ENCRYPTION_KEY_ADDITIVE_KEY = import.meta.env.VITE_MESSAGE_ENCRYPTION_KEY_ADDITIVE_KEY;
 
 
-const GamePage = () => {
+const ChatPage = () => {
     const { GameId } = useParams();
     const [gameData, setGameData] = useState()
     const [usernameValue, setUsername] = useState(undefined)
@@ -166,4 +166,4 @@ const GamePage = () => {
 
 }
 
-export default GamePage
+export default ChatPage

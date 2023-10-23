@@ -83,22 +83,6 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
 
     const BotMessage = ({ player_name, message, timestamp }) => {
         return (
-            // <div className="chat chat-end"> 
-
-            //     <div className="chat-image avatar">
-            //         <div className="w-10 rounded-full">
-            //             <img srcSet={`data:image/jpeg;base64,${npc_image}`} loading="lazy" />
-            //         </div>
-            //     </div>
-
-            //     <div className="flex gap-2 chat-header font-Comfortaa">
-            //         <h1>{formatTimestamp(timestamp)}</h1>
-            //         <h1>{player_name}</h1>
-            //     </div>
-
-            //     <div className="chat-bubble bg-website-secondary text-white font-Comfortaa">{message}</div>
-            // </div>
-
             <div className="flex items-start justify-start text-white font-Comfortaa">
                 
                 <div className="chat-image avatar">
@@ -136,20 +120,6 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
                 ))}
 
                 {isAiResponding &&
-                // <div className="chat chat-end"> 
-
-                //         <div className="chat-image avatar">
-                //             <div className="w-10 rounded-full">
-                //                 <img srcSet={`data:image/jpeg;base64,${npc_image}`} loading="lazy" />
-                //             </div>
-                //         </div>
-        
-                //         <div className="flex gap-2 chat-header font-Comfortaa">
-                //             <h1>{npc_data["name"]}</h1>
-                //         </div>
-    
-                //     <div className="chat-bubble bg-website-secondary text-white font-Comfortaa"><span className="loading loading-dots loading-md"></span></div>
-                // </div>
                 <div className="flex items-start justify-start text-white font-Comfortaa">
                 
                 <div className="chat-image avatar">

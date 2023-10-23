@@ -207,7 +207,7 @@ async def get_models():
 @app.post("/load_model")
 async def load_model(data: dict):
     data = data["params"]
-    url = "http://"+MONGO_URL+":4000/load_model/"+data["modal_name"]
+    url = "http://"+MONGO_URL+":4000/load_model/"+data["modal_name"]+"/"+data["gpu_threads"]
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -262,6 +262,8 @@ async def generate_character(data: dict, current_user: str = Depends(get_current
     data = data["params"]
     character = {}
 
+    data["generate_local"] = True
+
     if (data["generate_local"]) == "false":
         response = gpt_generate_character(data["character_prompt"])
         character["name"] = response["character_name"]
@@ -289,6 +291,8 @@ async def generate_character(data: dict, current_user: str = Depends(get_current
 async def generate_scenario(data: dict, current_user: str = Depends(get_current_user)):
     data = data["params"]
     scenario = ""
+
+    data["generate_local"] = True
 
     if (data["generate_local"]) == "false":
         response = gpt_generate_scenario(data["character_one_name"], data["character_two_name"], data["character_one_description"], data["character_two_description"], data["scenario_prompt"])

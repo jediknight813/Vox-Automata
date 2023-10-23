@@ -10,7 +10,6 @@ const ScrollingImages = () => {
   useEffect(() => {
     const loadInitialImages = async () => {
       const response = await GetImages(20);
-      console.log(response);
       setImages(response);
     };
 

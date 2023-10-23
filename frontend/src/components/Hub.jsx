@@ -52,7 +52,7 @@ const Hub = () => {
                         </div>
 
                         <div className=' w-full flex gap-4 flex-wrap font-Comfortaa justify-center'>
-                            <button onClick={() => setCurrentTab("Games")} className=' rounded-lg btn-sm bg-purple-800 '>Games</button>
+                            <button onClick={() => setCurrentTab("Chats")} className=' rounded-lg btn-sm bg-purple-800 '>Chats</button>
                             <button onClick={() => setCurrentTab("Scenarios")} className=' rounded-lg btn-sm bg-purple-800'>Senarios</button>
                             <button onClick={() => setCurrentTab("Player Characters")} className=' rounded-lg btn-sm bg-purple-800 '>Player Characters</button>
                             <button onClick={() => setCurrentTab("Npc Characters")} className=' rounded-lg btn-sm bg-purple-800 '>Npc Characters</button>
@@ -69,7 +69,7 @@ const Hub = () => {
                 }
 
 
-                {(currentTab == "Games") &&
+                {(currentTab == "Chats") &&
                     <GameCard type="display" username={usernameValue}/>
                 }
 
