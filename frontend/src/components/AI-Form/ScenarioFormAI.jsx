@@ -20,6 +20,7 @@ const ScenarioFormAI = () => {
     const [npcData, setNpcData] = useState()
     const [scenarioPrompt, setSenarioPrompt] = useState("")
     const [scenario, setScenario] = useState("")
+    const [isPublic, setIsPublic] = useState("false")
     const [isLoading, setIsloading] = useState(false)
 
 
@@ -73,7 +74,8 @@ const ScenarioFormAI = () => {
                 "npc": npcId,
                 "player": playerId,
                 "scenario": scenario,
-                "username": usernameValue
+                "username": usernameValue,
+                "public": isPublic
             }
             const response = await CreateEntry(data);
             setIsloading(false)
@@ -203,10 +205,21 @@ const ScenarioFormAI = () => {
                         <button onClick={generateScenario} className=' btn bg-website-accent text-white'>Generate Scenario</button>
                     }
                     
+                    <div className=' md:w-[95%] w-full flex gap-2  items-start flex-col'>
+                        <h1>Public Scenario</h1>
+                        <select value={isPublic} className='input w-full' onChange={(e) => setIsPublic(e.target.value)}>
+                            <option value="">Select an option</option>
+                            {textGenerationOptions.map((value) => (
+                                <option key={value} value={value}>
+                                    {value}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     {(scenarioNameValue !== "" && scenario !== "") &&
                         <button onClick={SaveScenario} className=' btn bg-website-accent text-white'>Save Scenario</button>
                     }
-                    
 
                 </div>
             }

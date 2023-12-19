@@ -15,7 +15,7 @@ const CharacterFormAI = () => {
     const characterGenders = ["male", "female"]
     const textGenerationOptions = ["true", "false"]
     const [isTextGenerationLocal, setIsTextGenerationLocal] = useState()
-
+    const [isPublic, setIsPublic] = useState("false")
 
     // character vars
     const [characterNameValue, setCharacterNameValue] = useState("")
@@ -26,7 +26,7 @@ const CharacterFormAI = () => {
     const [genderValue, setGenderValue] = useState("")
 
 
-    const generateScenario = async () => {
+    const generateCharacter = async () => {
         setIsloading(true)
         try {
             const response = await GetGenerateCharacterResponse(isTextGenerationLocal, characterPrompt);
@@ -42,7 +42,7 @@ const CharacterFormAI = () => {
       };
 
 
-    const SaveScenario = async () => {
+    const SaveCharacter = async () => {
         setIsloading(true)
         try {
             var data = {
@@ -53,7 +53,8 @@ const CharacterFormAI = () => {
                 "appearance": appearanceValue,
                 "wearing": wearingValue,
                 "age": ageValue,
-                "gender": genderValue
+                "gender": genderValue,
+                "public": isPublic
             }
             const response = await CreateEntry(data);
             setIsloading(false)
@@ -126,10 +127,10 @@ const CharacterFormAI = () => {
 
                     <h1 className=' font-Comfortaa text-2xl'> Generate Character </h1>
 
-                    {/* scenario prompt field. */}
+                    {/* character prompt field. */}
                     <div className=' md:w-[95%] w-full flex gap-2 items-start flex-col'>
                         <h1 className=' capitalize'>character prompt</h1>
-                        <input value={characterPrompt} onChange={(e) => setCharacterPrompt(e.target.value)} type='text' placeholder='enter scenario prompt.' className=' input w-full'/>
+                        <input value={characterPrompt} onChange={(e) => setCharacterPrompt(e.target.value)} type='text' placeholder='enter character prompt.' className=' input w-full'/>
                     </div>
 
                     {/* use local text generation field. */}
@@ -148,7 +149,7 @@ const CharacterFormAI = () => {
                     
 
                     {(characterPrompt !== "" && isTextGenerationLocal !== "") &&
-                        <button onClick={generateScenario} className=' btn bg-website-accent text-white'>Generate Character</button>
+                        <button onClick={generateCharacter} className=' btn bg-website-accent text-white'>Generate Character</button>
                     }
 
 
@@ -193,9 +194,21 @@ const CharacterFormAI = () => {
                             ))}
                         </select>
                     </div>
+                    
+                    <div className=' md:w-[95%] w-full flex gap-2  items-start flex-col'>
+                        <h1>Public Scenario</h1>
+                        <select value={isPublic} className='input w-full' onChange={(e) => setIsPublic(e.target.value)}>
+                            <option value="">Select an option</option>
+                            {textGenerationOptions.map((value) => (
+                                <option key={value} value={value}>
+                                    {value}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
                     {(characterNameValue !== "" && ageValue !== "" &&  genderValue !== "" &&  wearingValue !== "" &&  characterPersonalityValue !== "" &&  appearanceValue !== "" ) && 
-                        <button onClick={SaveScenario} className=' btn bg-website-accent text-white'>Save Character</button>
+                        <button onClick={SaveCharacter} className=' btn bg-website-accent text-white'>Save Character</button>
                     }
                     
                 </div>

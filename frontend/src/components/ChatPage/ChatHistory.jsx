@@ -42,23 +42,6 @@ const ChatHistory = ( { chat_messages, player_data, npc_data, player_image, npc_
 
     const PlayerMessage = ({ player_name, message, timestamp }) => {
         return (
-            // <div className="chat chat-start">
-
-            //     <div className="chat-image avatar">
-            //         <div className="w-10 rounded-full">
-            //             <img srcSet={`data:image/jpeg;base64,${player_image}`} loading="lazy "/>
-            //         </div>
-            //     </div>
-
-            //     <div className="flex gap-2 chat-header font-Comfortaa">
-            //         <h1>{formatTimestamp(timestamp)}</h1>
-            //         <h1>{player_name}</h1>
-            //     </div>
-
-            //     <div className="chat-bubble bg-website-secondary text-white font-Comfortaa">{message}</div>
-
-            // </div>
-
             <div className="flex items-end justify-end text-white font-Comfortaa">
 
                 <div>

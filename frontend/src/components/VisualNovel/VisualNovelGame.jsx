@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import characterImage from "./CharacterOne.png"
+// import characterImage from "./CharacterOne.png"
 
 const VisualNovelGame = () => {
   const canvasRef = useRef(null);

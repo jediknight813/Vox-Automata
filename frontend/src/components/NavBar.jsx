@@ -16,7 +16,8 @@ const NavBar = () => {
         author_model: '',
     });
     const [gpuLayers, setGpuLayers] = useState(0)
-    const PromptFormats = ["Alpaca", "Pygmalion2Format", "MagpieFormat", "NpcThinking"]
+    const [modelCtx, setModelCtx] = useState(4096)
+    const PromptFormats = ["Alpaca", "DolphinMixtralFormat", "Pygmalion2Format", "MagpieFormat", "NpcThinking"]
     const [currentPromptFormat, setPromptFormat] = useState()
 
 
@@ -73,9 +74,20 @@ const NavBar = () => {
                         </option>
                     ))}
                 </select>
+
+                <div className=' flex flex-col gap-3'>
+                    <h1>Gpu Layers</h1>
+                    <input className=' input' placeholder="35" value={gpuLayers} onChange={(e) => setGpuLayers(e.target.value)} />
+                </div>
+
+                <div className=' flex flex-col gap-3'>
+                    <h1>model context window</h1>
+                    <input className=' input' placeholder="35" value={modelCtx} onChange={(e) => setModelCtx(e.target.value)} />
+                </div>
+
                 <div className=' flex gap-3 items-center'>
                     <button onClick={() => UnloadModels()} className=' btn bg-red-800 text-white hover:bg-red-800'>Unload Model</button>
-                    <button onClick={() => LoadModel(selectedModel, gpuLayers)} className=' btn text-white bg-website-accent hover:bg-website-accent'>Load Model</button>
+                    <button onClick={() => LoadModel(selectedModel, gpuLayers, modelCtx)} className=' btn text-white bg-website-accent hover:bg-website-accent'>Load Model</button>
                 </div>
             </div>
 
@@ -100,12 +112,6 @@ const NavBar = () => {
                 
                 <button onClick={() => DownloadModel(modelFormData)} className='btn outline-none border-none text-white bg-website-accent hover:bg-website-accent'>Start Download</button>
             </div>
-
-            <div className=' flex flex-col gap-3'>
-                <h1 className=' mt-5'>Gpu Layers</h1>
-                <input className=' input' placeholder="35" onChange={(e) => setGpuLayers(e.target.value)} />
-            </div>
-
 
             <div className="modal-action flex-none w-full items-center justify-center">
                 <button className="btn outline-none border-none pr-10 pl-10 text-white bg-website-accent hover:bg-website-accent">Close</button>

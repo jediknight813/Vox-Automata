@@ -13,9 +13,9 @@ export const UnloadModels = async () => {
 }
 
 
-export const LoadModel = async (modal_name, gpu_threads=0) => {
+export const LoadModel = async (modal_name, gpu_threads=0, ctx_amount) => {
     const response = await axios.post(apiUrl+"/load_model", {
-        params: {"modal_name": modal_name, "gpu_threads": gpu_threads}
+        params: {"modal_name": modal_name, "gpu_threads": gpu_threads, "ctx_size": ctx_amount}
     });
     return response.data["message"]
 }

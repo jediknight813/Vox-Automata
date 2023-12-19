@@ -22,6 +22,8 @@ const ChatPage = () => {
     const [isMessageStreaming, setIsMessageStreaming] = useState(false)
     const [streamingMessage, setStreamingMessage] = useState(false)
     const [isAiResponding, setIsAiResponding] = useState(false)
+    // context hooks
+    const [contextMode, setContextMode] = useState("None")
 
 
     const handleDecryption = (message) => {
@@ -101,6 +103,7 @@ const ChatPage = () => {
     useEffect(() => {
         var username = Cookies.get('username')
         setUsername(username)
+        setContextMode()
         
         if (gameData !== undefined ) {
             const getPlayerImage = async () => {
@@ -122,18 +125,30 @@ const ChatPage = () => {
     return (
         <>
         
-            
+            {/* confirm restart story */}
             <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
                 <form method="dialog" className="modal-box">
                     <h3 className="font-bold text-lg">This will reset the story.</h3>
                     <p className="py-4">Are you sure you want to continue?</p>
                     <div className="modal-action">
-                    <button onClick={() => CallResetStory()} className="btn outline-none border-none bg-website-accent">Confirm</button>
+                    <button onClick={() => CallResetStory()} className="btn outline-none border-none bg-website-accent text-white">Confirm</button>
                     <button className="btn outline-none border-none btn-error">Close</button>
                     </div>
                 </form>
             </dialog>
-                
+
+
+            {/* Context settings. */}
+            <dialog id="my_modal_6" className="modal">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg text-center">Context Settings</h3>
+                    <p className="py-4">Press ESC key or click outside to close</p>
+                    <button>close</button>
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
         
             <div className=' w-full min-h-screen h-auto flex flex-col items-center'>
 
@@ -155,6 +170,7 @@ const ChatPage = () => {
                                     <button className="btn outline-none border-none  bg-website-primary text-white" onClick={ ()=> { window.my_modal_5.showModal()}}>Restart Story</button>
                                 </>
                             }
+                             <button className="btn outline-none border-none  bg-website-primary text-white" onClick={ ()=> { window.my_modal_6.showModal()}}>Context Settings</button>
                         </div>
                     </>
                 }

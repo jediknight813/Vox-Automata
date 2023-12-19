@@ -1,6 +1,6 @@
 fastapi
 pymongo
-guidance
+guidance==0.0.64
 requests
 openai
 python-dotenv
@@ -9,3 +9,4 @@ pydantic
 pillow
 bcrypt
 PyJWT
+tiktoken

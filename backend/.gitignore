@@ -1,3 +1,4 @@
 .env
 __pycache__
 ./scripts/UpdateCards.py
+scripts/Testing.py
